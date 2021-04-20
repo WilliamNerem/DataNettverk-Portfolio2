@@ -3,11 +3,14 @@ from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 import json
 from dataclasses import dataclass
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
 api = Api(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['CORS_HEADERS'] = 'Content-Type'
 db = SQLAlchemy(app)
+cors = CORS(app, resources={r"/": {"origins": "http://127.0.0.1:5000/"}})
 
 @dataclass
 class ProductModel(db.Model):
@@ -34,13 +37,14 @@ class ProductModel(db.Model):
 
 db.drop_all()
 db.create_all()
+product_id = ProductModel(productName='ps5')
+product = ProductModel(product_id=product_id.product_id, productName='ps5', price=4999, productInfoShort='Lættis bro', productInfoLong='Laaaaaang lættis bro', productImage='DataNettverk-Portfolio2\static\img\sony-ps5.jpg')
+db.session.add(product)
+db.session.commit()
 
 @app.route("/", methods=['GET', 'POST'])
+@cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def index():
-    product_id = ProductModel(productName='ps5')
-    product = ProductModel(product_id=product_id.product_id, productName='ps5', price=4999, productInfoShort='Lættis bro', productInfoLong='Laaaaaang lættis bro', productImage='DataNettverk-Portfolio2\static\img\sony-ps5.jpg')
-    db.session.add(product)
-    db.session.commit()
     #return render_template('index.html')
     productReturn = ProductModel.query.all()
     return jsonify(productReturn)

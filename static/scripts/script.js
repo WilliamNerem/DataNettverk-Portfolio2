@@ -1,5 +1,6 @@
 document.getElementById('test').addEventListener('click', getText);
 document.getElementById('getUsers').addEventListener('click', getUsers);
+document.getElementById('getProducts').addEventListener('click', getProducts);
 
 function getText(){
     console.log('Knappen er klikket')
@@ -42,4 +43,10 @@ function getUsers(){
         document.getElementById('output').innerHTML = output;
     })
 
+}
+
+function getProducts(){
+    fetch('http://127.0.0.1:5000/')
+    .then((res) => res.json())
+    .then((data) => console.log(data))
 }
