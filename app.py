@@ -50,7 +50,6 @@ def index():
     return jsonify(productReturn)
 
 @app.route("/", methods=['GET', 'POST'])
-@cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def renderIndex():
     return render_template('index.html')
 
