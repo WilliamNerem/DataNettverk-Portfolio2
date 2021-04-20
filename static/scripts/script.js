@@ -1,7 +1,7 @@
 document.getElementById('getProducts').addEventListener('click', getProducts);
 
-/* function getProducts(){
-    fetch('localhost:5000/fetchProducts')
+function getProducts(){
+    fetch('http://127.0.0.1:5000/fetchProducts')
     .then((res) => res.json())
     .then((data) => {
         console.log(data)
@@ -16,6 +16,4 @@ document.getElementById('getProducts').addEventListener('click', getProducts);
         })
         document.getElementById('output').innerHTML = output;
     })
-} */
-
-console.log("siden er renderet")
+}
