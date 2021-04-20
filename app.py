@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 
@@ -14,3 +14,7 @@ class ProductModel(db.Model):
     productInfoShort = db.Column(db.String(100), nullable=False)
     productInfoLong = db.Column(db.String(1000), nullable=False)
     productImage = db.Column(db.String(100), nullable=False)
+
+@app.route("/", methods=['GET', 'POST'])
+def index():
+    return render_template('index.html')
