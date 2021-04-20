@@ -42,12 +42,17 @@ product = ProductModel(product_id=product_id.product_id, productName='ps5', pric
 db.session.add(product)
 db.session.commit()
 
-@app.route("/", methods=['GET', 'POST'])
+@app.route("/fetchProducts", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def index():
     #return render_template('index.html')
     productReturn = ProductModel.query.all()
     return jsonify(productReturn)
+
+@app.route("/", methods=['GET', 'POST'])
+@cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
+def renderIndex():
+    return render_template('index.html')
 
 @app.route("/product/productid", methods=['GET', 'POST'])
 def productDescription():
