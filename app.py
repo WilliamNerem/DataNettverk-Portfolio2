@@ -45,5 +45,21 @@ def index():
     productReturn = ProductModel.query.all()
     return jsonify(productReturn)
 
+@app.route("/product/productid", methods=['GET', 'POST'])
+def productDescription():
+    return render_template('index.html')
+
+@app.route("/shoppingcart", methods=['GET', 'POST'])
+def shoppingcart():
+    return render_template('index.html')
+
+@app.route("/shoppingcart/checkout", methods=['GET', 'POST'])
+def checkout():
+    return render_template('index.html')
+
+@app.route("/addproducts", methods=['GET', 'POST'])
+def addProducts():
+    return render_template('index.html')
+
 if __name__ == "__main__":
     app.run(debug=True)
