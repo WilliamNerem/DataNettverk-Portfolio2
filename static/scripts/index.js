@@ -9,7 +9,7 @@ fetch('http://127.0.0.1:5000/fetchProducts')
                 <h3>Name: ${product.productName}</h3>
                 <p>Price: ${product.price}</p>
                 <p>Info: ${product.productInfoShort}</p>
-                <p>Detailed Info: ${product.productInfoLong}</p>
+                <a href=product_info><button id="showProduct">Show Info</button></a>
             </div>
         `
     })
