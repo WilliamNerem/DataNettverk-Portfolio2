@@ -14,6 +14,8 @@ cors = CORS(app, resources={r"/": {"origins": "http://127.0.0.1:5000/"}})
 
 @dataclass
 class ProductModel(db.Model):
+    __tablename__='products'
+
     product_id: int
     productName: str
     price: int
@@ -34,6 +36,15 @@ class ProductModel(db.Model):
                  price = {price}, productInfoShort = {productInfoShort},
                  productInfoLong = {productInfoLong}, productImage = {productImage})"
                  '''
+
+class ShoppingcartModel(db.Model):
+    __tablename__='cartItems'
+
+    shoppingcart_id: int
+    product_id: int
+
+    shoppingcart_id = db.Column(db.Integer, primary_key=True)
+    product_id = db.Column(db.Integer, nullable=False)
 
 def addProducts():
     product_id1 = ProductModel(productName='Shark NV352')
@@ -74,6 +85,7 @@ db.drop_all()
 db.create_all()
 addProducts()
 
+
 @app.route("/", methods=['GET', 'POST'])
 def renderIndex():
     return render_template('index.html')
@@ -99,9 +111,25 @@ def productDescription():
 def shoppingcart():
     return render_template('index.html')
 
+@app.route("/shoppingcart/<int:product_id>", methods=['GET', 'POST'])
+def addToShoppingcart(product_id):
+    cartItem = ShoppingcartModel(product_id=product_id)
+    db.session.add(cartItem)
+    db.session.commit()
+    return render_template('testShoppingcart.html', countCart = ShoppingcartModel.query.count())
+
 @app.route("/shoppingcart/checkout", methods=['GET', 'POST'])
 def checkout():
-    return render_template('index.html')
+    return render_template('testShoppingcart.html')
+
+@app.route("/shoppingcart/checkout/items", methods=['GET', 'POST'])
+@cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
+def checkoutItems():
+    returnArray = []
+    products = ProductModel.query.all()
+    for i in ShoppingcartModel.query.all():
+        returnArray.append(products[i.product_id-1])
+    return jsonify(returnArray)
 
 @app.route("/addproducts", methods=['GET', 'POST'])
 def addProducts():
