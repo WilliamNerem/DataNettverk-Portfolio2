@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test</title>
+</head>
+<body>
+    <h1>Add products</h1>
+    <form action="/addproductsReal">
+        <label for="pname">Product name:</label><br>
+        <input type="text" id="pname" name="pname"><br>
+        <label for="price">Price:</label><br>
+        <input type="text" id="price" name="price"><br>
+        <label for="pinfos">Product info short:</label><br>
+        <input type="text" id="pinfos" name="pinfos"><br>
+        <label for="pinfol">Product info long:</label><br>
+        <input type="text" id="pinfol" name="pinfol"><br>
+        <label for="productimg">Product image:</label><br>
+        <input type="text" id="productimage" name="productimage">
+        <button class="btn btn-primary mb-2" type="submit">Add product</button>
+      </form>
+
+    <script src="{{ url_for('static', filename='scripts/addproducts.js') }}"></script>
+</body>
+</html>

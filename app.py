@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, request, render_template, jsonify
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 import json
@@ -132,8 +132,20 @@ def checkoutItems():
     return jsonify(returnArray)
 
 @app.route("/addproducts", methods=['GET', 'POST'])
-def addProducts():
-    return render_template('index.html')
+def addproductsyup():
+    return render_template('addproducts.html')
 
+@app.route("/addproductsReal", methods=['GET', 'POST'])
+def addProductsReal():
+    pname=request.form['pname']
+    price=request.form.get('price', False)
+    pinfos=request.form.get('pinfos', False)
+    pinfol=request.form.get('pinfol', False)
+    productimg=request.form.get('productimage', False)
+    product = ProductModel(ProductName=pname, price=price, ProductInfoShort=pinfos, ProductInfoLong=pinfol, productImage=productimg)
+    print(product)
+    db.session.add(product)
+    db.session.commit()
+    return render_template('addproducts.html')
 if __name__ == "__main__":
     app.run(debug=True)
