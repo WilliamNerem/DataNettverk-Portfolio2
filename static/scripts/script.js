@@ -12,6 +12,7 @@ function getProducts(){
                     <li>Price: ${product.price}</li>
                     <li>Name: ${product.productName}</li>
                 </ul>
+                <img src="${product.productImage}" height="200">
             `
         })
         document.getElementById('output').innerHTML = output;
