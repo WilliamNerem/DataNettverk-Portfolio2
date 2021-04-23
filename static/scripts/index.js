@@ -5,7 +5,7 @@ fetch('http://127.0.0.1:5000/fetchProducts')
     data.forEach(function(product){
         output += `
             <div>
-                <img src="{{ url_for('static', filename='${product.productImage}') }}" />
+                <img src="${product.productImage}" />
                 <h3>Name: ${product.productName}</h3>
                 <p>Price: ${product.price}</p>
                 <p>Info: ${product.productInfoShort}</p>
