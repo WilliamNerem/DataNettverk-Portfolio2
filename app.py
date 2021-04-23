@@ -105,7 +105,7 @@ def index():
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def productDescription():
     productReturn = ProductModel.query.all()
-    return jsonify(productReturn[0])
+    return jsonify(productReturn)
 
 @app.route("/shoppingcart", methods=['GET', 'POST'])
 def shoppingcart():
