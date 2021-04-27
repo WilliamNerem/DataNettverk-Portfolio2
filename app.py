@@ -85,6 +85,8 @@ db.drop_all()
 db.create_all()
 addProducts()
 
+currentProduct = {}
+
 
 @app.route("/", methods=['GET', 'POST'])
 def renderIndex():
@@ -96,16 +98,25 @@ def renderProductInfo():
 
 @app.route("/fetchProducts", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
-def index():
-    #return render_template('index.html')
+def fetchProducts():
     productReturn = ProductModel.query.all()
     return jsonify(productReturn)
 
-@app.route("/product/productid", methods=['GET', 'POST'])
+@app.route("/fetchCurrent", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
-def productDescription():
+def fetchCurrent():
+    print(currentProduct)
+    print(jsonify(currentProduct))
+    return jsonify(currentProduct)
+
+@app.route("/product/<int:product_id>", methods=['GET', 'POST'])
+@cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
+def productDescription(product_id):
+    global currentProduct
     productReturn = ProductModel.query.all()
-    return jsonify(productReturn)
+    currentProduct = productReturn[product_id-1]
+    print(currentProduct)
+    return render_template('product.html')
 
 @app.route("/shoppingcart", methods=['GET', 'POST'])
 def shoppingcart():

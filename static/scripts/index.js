@@ -9,27 +9,25 @@ fetch('http://127.0.0.1:5000/fetchProducts')
                 <h3>Name: ${product.productName}</h3>
                 <p>Price: ${product.price}</p>
                 <p>Info: ${product.productInfoShort}</p>
-                <form class='getProductInfo'>
-                    <input type="hidden" id="product_id_${product.product_id}" value="${product.product_id}">
-                    <button type="submit" id="showProduct">Show Info${product.product_id}</button>
-                </form>
+                <button type="submit" class="showProduct" value="${product.product_id}">Show Info${product.product_id}</button>
+ 
             </div>
         `
     })
     document.getElementById('output').innerHTML = output;
     
     
-    document.querySelectorAll('.getProductInfo').forEach(item => {
-        item.addEventListener('submit', getProductInfo)
+    document.querySelectorAll('.showProduct').forEach(item => {
+        item.addEventListener('click', getProductInfo)
     })
 
     
-    function getProductInfo(e) {
-        e.preventDefault();
-        let product_id_value = document.getElementById('product_id_2').value;
-        console.log(product_id_value);
+     function getProductInfo(e) {
+         e.preventDefault();
+
+        let product_id_value = this.value;
     
-        fetch('http://127.0.0.1:5000/product/productid', {
+        fetch(`http://127.0.0.1:5000/product/${product_id_value}`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json, text/plain, */*',
@@ -37,8 +35,14 @@ fetch('http://127.0.0.1:5000/fetchProducts')
             },
             body: JSON.stringify({product_id_value:product_id_value})
         })
-        .then((res) => res.json())
-        .then((data) => console.log(data[product_id_value].product_id))
+        .then((res) => res.text())
+        .then((data) => {
+            console.log(data)
+
+            window.location.replace("http://127.0.0.1:5000/product_info")
+
+        })
         .catch((error) => console.log(error))
-    }
+
+     }
 })
