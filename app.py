@@ -141,6 +141,12 @@ def addToShoppingcart(product_id):
 def checkout():
     return render_template('testShoppingcart.html')
 
+@app.route("/shoppingcart/countItems", methods=['GET', 'POST'])
+@cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
+def checkNumberOfItems():    
+    returnArray = ShoppingcartModel.query.all()
+    return jsonify(returnArray)
+
 @app.route("/shoppingcart/checkout/items", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def checkoutItems():
