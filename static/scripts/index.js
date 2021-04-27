@@ -9,7 +9,8 @@ fetch('http://127.0.0.1:5000/fetchProducts')
                 <h3>Name: ${product.productName}</h3>
                 <p>Price: ${product.price}</p>
                 <p>Info: ${product.productInfoShort}</p>
-                <button type="submit" class="showProduct" value="${product.product_id}">Show Info${product.product_id}</button>
+                <button class="showProduct" value="${product.product_id}">Show Info</button>
+                <button class="addToCart" value="${product.product_id}">Add to cart</button>
  
             </div>
         `
@@ -19,6 +20,10 @@ fetch('http://127.0.0.1:5000/fetchProducts')
     
     document.querySelectorAll('.showProduct').forEach(item => {
         item.addEventListener('click', getProductInfo)
+    })
+
+    document.querySelectorAll('.addToCart').forEach(item => {
+        item.addEventListener('click', addToCart)
     })
 
     
@@ -45,4 +50,12 @@ fetch('http://127.0.0.1:5000/fetchProducts')
         .catch((error) => console.log(error))
 
      }
+
+
+     function addToCart(e) {
+         e.preventDefault();
+
+         console.log("add to cart is clicked")
+     }
+
 })

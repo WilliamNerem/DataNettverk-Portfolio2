@@ -7,9 +7,19 @@
     <title>Test</title>
 </head>
 <body>
+    <div id="shoppingCart">
+        Cart
+    </div>
+    <button id="goToAddProduct" onclick="handleClick()">Go to add product</button>
     <h1>Shop</h1>
     <div id="output"></div>
 
+    <script>
+        function handleClick() {
+            window.location.replace("http://127.0.0.1:5000/addproducts")
+        }
+
+    </script>
     <script src="{{ url_for('static', filename='scripts/index.js') }}"></script>
 </body>
 </html>
