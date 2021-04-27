@@ -18,9 +18,11 @@
         <label for="pinfol">Product info long:</label><br>
         <input type="text" id="pinfol" name="pinfol"><br>
         <label for="productimg">Product image:</label><br>
-        <input type="text" id="productimage" name="productimage">
+        <input type="file" id="productimage" name="productimage"><br>
+        <input type=submit value=Upload><br>
         <button class="btn btn-primary mb-2" type="submit">Add product</button>
       </form>
+      <label for="result" id="result"></label>
 
     <script src="{{ url_for('static', filename='scripts/addproducts.js') }}"></script>
 </body>

@@ -1,9 +1,11 @@
-from flask import Flask, request, render_template, jsonify
+from flask import Flask, request, flash, send_from_directory, redirect, url_for, render_template, jsonify
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 import json
+import os
 from dataclasses import dataclass
 from flask_cors import CORS, cross_origin
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 api = Api(app)
@@ -11,6 +13,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['CORS_HEADERS'] = 'Content-Type'
 db = SQLAlchemy(app)
 cors = CORS(app, resources={r"/": {"origins": "http://127.0.0.1:5000/"}})
+UPLOAD_FOLDER = '../static/img'
+ALLOWED_EXTENSIONS = {'png', 'jpg'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 
 @dataclass
 class ProductModel(db.Model):
@@ -156,6 +162,36 @@ def removeCheckoutItems(shoppingcart_id):
 def addproductsyup():
     return render_template('addproducts.html')
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/addproductsReal/upload', methods=['GET', 'POST'])
+def upload_file():
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        # if user does not select file, browser also
+        # submit an empty part without filename
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return redirect(url_for('uploaded_file',
+                                    filename=filename))
+    else:
+        return render_template('addproducts.html')
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'],
+                               filename)
+
 @app.route("/addproductsReal", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def addProductsReal():
@@ -171,7 +207,6 @@ def addProductsReal():
         db.session.commit()
         return render_template('addproducts.html')
     else:
-        print("SHITFACE")
         return render_template('addproducts.html')
 if __name__ == "__main__":
     app.run(debug=True)

@@ -17,7 +17,6 @@ function formSubmitted() {
         productimage: productimage
     }
 
-
     fetch('http://127.0.0.1:5000/addproductsReal', {
         method: 'POST', 
         headers: {
@@ -28,5 +27,7 @@ function formSubmitted() {
     })
     .then((res) => res.text())
     .then((data) => console.log(data))
+    document.getElementById('result').innerHTML = "<h3>Product added!</h3>"
+    document.getElementById('myform').reset();
 
 }
