@@ -157,16 +157,21 @@ def addproductsyup():
     return render_template('addproducts.html')
 
 @app.route("/addproductsReal", methods=['GET', 'POST'])
+@cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def addProductsReal():
-    pname=request.form['pname']
-    price=request.form.get('price', False)
-    pinfos=request.form.get('pinfos', False)
-    pinfol=request.form.get('pinfol', False)
-    productimg=request.form.get('productimage', False)
-    product = ProductModel(ProductName=pname, price=price, ProductInfoShort=pinfos, ProductInfoLong=pinfol, productImage=productimg)
-    print(product)
-    db.session.add(product)
-    db.session.commit()
-    return render_template('addproducts.html')
+    if request.method == 'POST':
+        reqdata = request.get_json()
+        pname = reqdata['pname']
+        price = reqdata['price']
+        pinfos = reqdata['pinfos']
+        pinfol = reqdata['pinfol']
+        productimage = reqdata['productimage']
+        product = ProductModel(productName=pname, price=price, productInfoShort=pinfos, productInfoLong=pinfol, productImage=productimage)
+        db.session.add(product)
+        db.session.commit()
+        return render_template('addproducts.html')
+    else:
+        print("SHITFACE")
+        return render_template('addproducts.html')
 if __name__ == "__main__":
     app.run(debug=True)
