@@ -37,6 +37,7 @@ class ProductModel(db.Model):
                  productInfoLong = {productInfoLong}, productImage = {productImage})"
                  '''
 
+@dataclass
 class ShoppingcartModel(db.Model):
     __tablename__='cartItems'
 
@@ -123,6 +124,7 @@ def shoppingcart():
     return render_template('index.html')
 
 @app.route("/shoppingcart/<int:product_id>", methods=['GET', 'POST'])
+@cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def addToShoppingcart(product_id):
     cartItem = ShoppingcartModel(product_id=product_id)
     db.session.add(cartItem)
@@ -141,6 +143,14 @@ def checkoutItems():
     for i in ShoppingcartModel.query.all():
         returnArray.append(products[i.product_id-1])
     return jsonify(returnArray)
+
+@app.route("/shoppingcart/remove/<int:shoppingcart_id>", methods=['GET', 'POST'])
+@cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
+def removeCheckoutItems(shoppingcart_id):
+    ShoppingcartModel.query.filter_by(shoppingcart_id = shoppingcart_id).delete()
+    db.session.commit()
+    cartReturn = ShoppingcartModel.query.all()
+    return jsonify(cartReturn)
 
 @app.route("/addproducts", methods=['GET', 'POST'])
 def addproductsyup():
