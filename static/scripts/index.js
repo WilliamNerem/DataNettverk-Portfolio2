@@ -5,21 +5,26 @@ document.getElementById('shoppingCart').innerHTML = `<button id="goToCart" oncli
 fetch('http://127.0.0.1:5000/fetchProducts')
 .then((res) => res.json())
 .then((data) => {
-    let output = '<h2>Products</h2>';
+    let output = '<p class="lead">Owning a vacuum cleaner is essential to keep your home clean!</p>';
     data.forEach(function(product){
         output += `
-            <div>
-                <img src="${product.productImage}" />
-                <h3>Name: ${product.productName}</h3>
-                <p>Price: ${product.price}</p>
-                <p>Info: ${product.productInfoShort}</p>
-                <button class="showProduct" value="${product.product_id}">Show Info</button>
-                <button class="addToCart" value="${product.product_id}">Add to cart</button>
- 
+            <div class="col-sm-3">
+                <div class="card text-dark bg-light mb-3 h-100">
+                    <img src="${product.productImage}" class"card-img-top" />
+                    <div class="card-body">
+                        <h5 class"card-title">${product.productName}</h3>
+                        <h6 class="card-subtitle mb-2 text-muted">${product.price},-</h6>
+                        <p class="card-text">${product.productInfoShort}</p>
+                    </div>
+                    <div class="card-footer">
+                        <button class="showProduct btn btn-outline-dark" value="${product.product_id}">Show Info</button>
+                        <button class="addToCart btn btn-outline-dark" value="${product.product_id}">Add to cart</button>
+                    </div>
+                </div>
             </div>
         `
     })
-    document.getElementById('output').innerHTML = output;
+    document.getElementById('renderContent').innerHTML = output;
     
     
     document.querySelectorAll('.showProduct').forEach(item => {

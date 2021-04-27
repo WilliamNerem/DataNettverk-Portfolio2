@@ -1,14 +1,13 @@
 fetch("http://127.0.0.1:5000/fetchCurrent")
 .then((res) => res.json())
 .then((data) => {
-    let output = `<h1> ${data.productName} </h1>`
+    let output = `<h2 class="display-2"> ${data.productName} </h2><p class="lead">${data.productInfoLong}</p>`
     output += `
         <div>
         <img src="${data.productImage}" />
             <p>Price: ${data.price}</p>
-            <p>Info: ${data.productInfoLong}</p>
         </div>
     `
-    document.getElementById('output').innerHTML = output;
+    document.getElementById('renderContent').innerHTML = output;
 })
 
