@@ -1,6 +1,6 @@
 //idCounter = 0
 itemsInCart = 0
-document.getElementById('shoppingCart').innerHTML = `<button id="goToCart" onclick="displayCart()">${itemsInCart}</button>`
+checkItemsInCart()
 
 fetch('http://127.0.0.1:5000/fetchProducts')
 .then((res) => res.json())
@@ -76,10 +76,10 @@ function checkItemsInCart(){
     .then((res) => res.json())
     .then((data) => {
         console.log(data.length)
-        itemsInCart = data.length + 1;
+        itemsInCart = data.length;
         //idCounter = data[data.length - 1].shoppingcart_id + 1
         //console.log(idCounter)
-        document.getElementById('shoppingCart').innerHTML = `<button id="goToCart" onclick="displayCart()">${itemsInCart}</button>`
+        document.getElementById('shoppingCart').innerHTML = `${itemsInCart}`
     })
 
 }

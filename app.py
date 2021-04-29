@@ -211,6 +211,7 @@ def form():
 def upload():
     if request.method == 'POST':
         f = request.files['file']
+        print(f)
         filename = secure_filename(f.filename)
         f.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
         return os.path.join(app.config['UPLOAD_FOLDER'],filename)
@@ -225,16 +226,21 @@ def uploaded_file(filename):
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def addProductsReal():
     if request.method == 'POST':
+        #f = request.files['file']
+        #filename = secure_filename(f.filename)
+        #f.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
         reqdata = request.get_json()
         pname = reqdata['pname']
         price = reqdata['price']
         pinfos = reqdata['pinfos']
         pinfol = reqdata['pinfol']
-        #productimage = redirect("/upload")
-        f = request.files['file']
-        filename = secure_filename(f.filename)
-        f.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
-        print(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+        productimage = reqdata['productimage']
+        print(productimage)
+        filename = secure_filename(productimage)
+        #f.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+        print('poopo')
+        print(productimage)
+        print(filename)
         #filename = secure_filename(f.filename)
         #f.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
         #productimage = filename

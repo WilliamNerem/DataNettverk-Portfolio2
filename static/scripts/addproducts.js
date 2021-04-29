@@ -8,7 +8,7 @@ function formSubmitted() {
     let price = document.getElementById('price').value;
     let pinfos = document.getElementById('pinfos').value;
     let pinfol = document.getElementById('pinfol').value;
-    let productimage = document.getElementById('productimage').value;
+    let productimage = document.getElementById('file').files[0];
     const product = {
         pname: pname,
         price: price,
