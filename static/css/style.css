@@ -3,7 +3,7 @@
     margin: 1rem;
 }
 
-.display-flex button {
+.display-flex .addToCart {
     margin-left: 15rem;
 }
 
@@ -25,4 +25,8 @@
 
 .img-thumbnail {
     width: 410px;
+}
+
+.btn-amount {
+    padding: 0;
 }

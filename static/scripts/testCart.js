@@ -16,21 +16,15 @@ function displayCart(){
         if (addedToCart.includes(product.product_id) == false){
             addedToCart.push(product.product_id)
             output += `
-            <div class="col-sm-3" id="cartId${product.shoppingcart_id}">
-                <div class="card text-dark bg-light mb-3 h-100">
-                    <img src="${product.productImage}" class"card-img-top" />
-                    <div class="card-body">
-                        <h5 class"card-title">${product.productName}</h3>
-                        <h6 class="card-subtitle mb-2 text-muted">${product.price},-</h6>
-                        <p class="card-text">${product.productInfoShort}</p>
-                    </div>
-                    <div class="card-footer" id="cartButtons${product.product_id}">
-                        <button class="btn btn-outline-dark" onclick="deleteFromCart(${product.shoppingcart_id},${product.product_id})">-</button>
-                        <h6 class="card-subtitle mb-2 text-muted" id="countInCart${product.product_id}">${count}</h6>
-                        <button class="addAnotherToCart btn btn-outline-dark" value="${product.product_id}">+</button>
-                    </div>
+            <li class="list-group-item d-flex justify-content-between align-items-center" id="cartId${product.shoppingcart_id}">
+                <h5>${product.productName}</h3>
+                <h6 class="text-muted">${product.price},-</h6>
+                <div class="display-flex" id="cartButtons${product.product_id}">
+                    <button class="btn-amount btn btn-outline-dark btn-sm" onclick="deleteFromCart(${product.shoppingcart_id},${product.product_id})">-</button>
+                    <span class="badge bg-dark rounded-pill" id="countInCart${product.product_id}">${count}</span>
+                    <button class="addAnotherToCart btn btn-outline-dark btn-sm btn-amount" value="${product.product_id}">+</button>
                 </div>
-            </div>
+            </li>
             `
             document.getElementById('renderContent').innerHTML = output;
         } 
@@ -38,9 +32,9 @@ function displayCart(){
             addedToCart.push(product.product_id)
 
             outputBtn = `
-            <button class="btn btn-outline-dark" onclick="deleteFromCart(${product.shoppingcart_id},${product.product_id})">-</button>
-            <h6 class="card-subtitle mb-2 text-muted" id="countInCart${product.product_id}">${count}</h6>
-            <button class="addAnotherToCart btn btn-outline-dark" value="${product.product_id}">+</button>
+            <button class="btn btn-outline-dark btn-sm btn-amount" onclick="deleteFromCart(${product.shoppingcart_id},${product.product_id})">-</button>
+            <span class="badge bg-dark rounded-pill" id="countInCart${product.product_id}">${count}</span>
+            <button class="addAnotherToCart btn btn-outline-dark btn-sm btn-amount" value="${product.product_id}">+</button>
             `
 
             document.getElementById('cartButtons'+product.product_id).innerHTML = outputBtn
