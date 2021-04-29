@@ -53,7 +53,7 @@ fetch('http://127.0.0.1:5000/fetchProducts')
         .then((data) => {
             console.log(data)
 
-            window.location.replace("http://127.0.0.1:5000/product_info")
+            window.location.replace(`http://127.0.0.1:5000/product/${product_id_value}`)
 
         })
         .catch((error) => console.log(error))

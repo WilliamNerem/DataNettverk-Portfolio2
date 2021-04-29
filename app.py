@@ -109,10 +109,6 @@ currentProduct = {}
 def renderIndex():
     return render_template('index.html')
 
-@app.route("/product_info", methods=['GET', 'POST'])
-def renderProductInfo():
-    return render_template('product.html')
-
 @app.route("/fetchProducts", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def fetchProducts():
@@ -128,9 +124,13 @@ def fetchCurrent():
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def productDescription(product_id):
     global currentProduct
-    productReturn = ProductModel.query.all()
-    currentProduct = productReturn[product_id-1]
-    return render_template('product.html')
+    try:
+        productReturn = ProductModel.query.all()
+        currentProduct = productReturn[product_id-1]
+        return render_template('product.html')
+    except:
+        product_exists = "false"
+        return render_template('product.html', product_exists = product_exists)
 
 @app.route("/shoppingcart", methods=['GET', 'POST'])
 def shoppingcart():
