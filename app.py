@@ -13,9 +13,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['CORS_HEADERS'] = 'Content-Type'
 db = SQLAlchemy(app)
 cors = CORS(app, resources={r"/": {"origins": "http://127.0.0.1:5000/"}})
-UPLOAD_FOLDER = '../static/img'
-ALLOWED_EXTENSIONS = {'png', 'jpg'}
+UPLOAD_FOLDER = 'static/img'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
 @dataclass
@@ -168,11 +169,10 @@ def removeCheckoutItems(shoppingcart_id):
 def addproductsyup():
     return render_template('addproducts.html')
 
-def allowed_file(filename):
+'''def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route('/addproductsReal/upload', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
         # check if the post request has the file part
@@ -184,20 +184,36 @@ def upload_file():
         # submit an empty part without filename
         if file.filename == '':
             flash('No selected file')
+            print("er vi her?")
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('uploaded_file',
-                                    filename=filename))
+            print("eller her kanskje?")
+            return jsonify(uploaded_file(filename))
     else:
+        print("SHIETFACE")
         return render_template('addproducts.html')
+        '''
 
-@app.route('/uploads/<filename>')
+@app.route('/form')
+def form():
+    return render_template('form.html')
+ 
+@app.route('/upload', methods = ['POST', 'GET'])
+def upload():
+    if request.method == 'POST':
+        f = request.files['file']
+        filename = secure_filename(f.filename)
+        f.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+        return os.path.join(app.config['UPLOAD_FOLDER'],filename)
+
+'''@app.route('/uploads/<filename>')
 def uploaded_file(filename):
+    print("YEEEET")
     return send_from_directory(app.config['UPLOAD_FOLDER'],
                                filename)
-
+'''
 @app.route("/addproductsReal", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def addProductsReal():
@@ -207,8 +223,15 @@ def addProductsReal():
         price = reqdata['price']
         pinfos = reqdata['pinfos']
         pinfol = reqdata['pinfol']
-        productimage = reqdata['productimage']
-        product = ProductModel(productName=pname, price=price, productInfoShort=pinfos, productInfoLong=pinfol, productImage=productimage)
+        #productimage = redirect("/upload")
+        f = request.files['file']
+        filename = secure_filename(f.filename)
+        f.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+        print(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+        #filename = secure_filename(f.filename)
+        #f.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+        #productimage = filename
+        product = ProductModel(productName=pname, price=price, productInfoShort=pinfos, productInfoLong=pinfol, productImage=filename)
         db.session.add(product)
         db.session.commit()
         return render_template('addproducts.html')

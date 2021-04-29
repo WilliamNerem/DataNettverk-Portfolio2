@@ -9,7 +9,7 @@
 </head>
 <body>
     <h1>Add products</h1>
-    <form action="/addproductsReal" id="myform">
+    <form action="/addproductsReal" id="myform" method = "POST" enctype = "multipart/form-data">
         <label for="pname">Product name:</label><br>
         <input type="text" id="pname" name="pname"><br>
         <label for="price">Price:</label><br>
@@ -19,9 +19,10 @@
         <label for="pinfol">Product info long:</label><br>
         <input type="text" id="pinfol" name="pinfol"><br>
         <label for="productimg">Product image:</label><br>
-        <input type="file" id="productimage" name="productimage"><br>
-        <input type=submit value=Upload><br>
-        <button class="btn btn-primary mb-2" type="submit">Add product</button>
+        <input type = "file" name = "file" id = "file" value=""/>
+        <input type = "submit" value = "Submit" />
+        <!-- <input type="file" action = "/upload" method = "POST" id="productimage" name="productimage" enctype = "multipart/form-data"> -->
+        <!-- <button class="btn btn-primary mb-2" type="submit">Add product</button> -->
       </form>
       <label for="result" id="result"></label>
 
