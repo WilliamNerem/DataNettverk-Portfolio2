@@ -1,0 +1,12 @@
+.display-flex {
+    display: flex;
+    margin: 1rem;
+}
+
+.display-flex button {
+    margin-left: 15rem;
+}
+
+.container {
+    padding: 2rem;
+}

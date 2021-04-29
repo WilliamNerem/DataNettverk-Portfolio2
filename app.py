@@ -122,8 +122,6 @@ def fetchProducts():
 @app.route("/fetchCurrent", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def fetchCurrent():
-    print(currentProduct)
-    print(jsonify(currentProduct))
     return jsonify(currentProduct)
 
 @app.route("/product/<int:product_id>", methods=['GET', 'POST'])
@@ -132,7 +130,6 @@ def productDescription(product_id):
     global currentProduct
     productReturn = ProductModel.query.all()
     currentProduct = productReturn[product_id-1]
-    print(currentProduct)
     return render_template('product.html')
 
 @app.route("/shoppingcart", methods=['GET', 'POST'])
