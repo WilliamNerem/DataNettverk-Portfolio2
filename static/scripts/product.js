@@ -25,6 +25,29 @@ if (product_exists == 'false') {
             </div>
         `
         document.getElementById('renderContent').innerHTML = output;
-    })
 
+        document.querySelectorAll('.addToCart').forEach(item => {
+            item.addEventListener('click', addToCart)
+        })
+        function addToCart() {
+            event.preventDefault();
+            let prodId = this.value
+            fetch("http://127.0.0.1:5000/shoppingcart/" + prodId)
+            console.log("add to cart is clicked")
+            checkItemsInCart()
+        }
+    
+        // function checkItemsInCart(){
+        //     fetch('http://127.0.0.1:5000/shoppingcart/countItems')
+        //     .then((res) => res.json())
+        //     .then((data) => {
+        //         console.log(data.length)
+        //         itemsInCart = data.length;
+        //         document.getElementById('shoppingCart').innerHTML = `${itemsInCart}`
+        //     })
+    
+        // }
+    })
+    
+    
 }
