@@ -49,9 +49,19 @@ class ShoppingcartModel(db.Model):
 
     shoppingcart_id: int
     product_id: int
+    productName: str
+    price: int
+    productInfoShort: str
+    productInfoLong: str
+    productImage: str
 
     shoppingcart_id = db.Column(db.Integer, primary_key=True)
     product_id = db.Column(db.Integer, nullable=False)
+    productName = db.Column(db.String(30), nullable=False)
+    price = db.Column(db.Integer, nullable=False)
+    productInfoShort = db.Column(db.String(100), nullable=False)
+    productInfoLong = db.Column(db.String(1000), nullable=False)
+    productImage = db.Column(db.String(100), nullable=False)
 
 def addProducts():
     product_id1 = ProductModel(productName='Shark NV352')
@@ -132,8 +142,11 @@ def shoppingcart():
 @app.route("/shoppingcart/<int:product_id>", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def addToShoppingcart(product_id):
-    cartItem = ShoppingcartModel(product_id=product_id)
-    db.session.add(cartItem)
+    cartItemId = ShoppingcartModel(product_id = product_id)
+    products = ProductModel.query.all()
+    cartItem = products[product_id-1]
+    addCartItem = ShoppingcartModel(shoppingcart_id = cartItemId.shoppingcart_id, product_id = cartItem.product_id, productName=cartItem.productName, price=cartItem.price, productInfoShort = cartItem.productInfoShort, productInfoLong = cartItem.productInfoLong, productImage = cartItem.productImage)
+    db.session.add(addCartItem)
     db.session.commit()
     return render_template('testShoppingcart.html', countCart = ShoppingcartModel.query.count())
 
@@ -150,10 +163,7 @@ def checkNumberOfItems():
 @app.route("/shoppingcart/checkout/items", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def checkoutItems():
-    returnArray = []
-    products = ProductModel.query.all()
-    for i in ShoppingcartModel.query.all():
-        returnArray.append(products[i.product_id-1])
+    returnArray = ShoppingcartModel.query.all()
     return jsonify(returnArray)
 
 @app.route("/shoppingcart/remove/<int:shoppingcart_id>", methods=['GET', 'POST'])
