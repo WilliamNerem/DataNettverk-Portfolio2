@@ -134,7 +134,7 @@ def productDescription(product_id):
 
 @app.route("/shoppingcart", methods=['GET', 'POST'])
 def shoppingcart():
-    return render_template('index.html')
+    return render_template('testShoppingcart.html')
 
 @app.route("/shoppingcart/<int:product_id>", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
