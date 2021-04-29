@@ -10,9 +10,9 @@ fetch('http://127.0.0.1:5000/fetchProducts')
         output += `
             <div class="col-sm-3">
                 <div class="card text-dark bg-light mb-3 h-100">
-                    <img src="${product.productImage}" class"card-img-top" />
+                    <input type="image" src="${product.productImage}" class="showProduct card-img-top" value="${product.product_id}" />
                     <div class="card-body">
-                        <h5 class"card-title">${product.productName}</h3>
+                        <button class="showProduct card-title-btn" value="${product.product_id}"><h5 class"card-title">${product.productName}</h5></button>
                         <h6 class="card-subtitle mb-2 text-muted">${product.price},-</h6>
                         <p class="card-text">${product.productInfoShort}</p>
                     </div>
