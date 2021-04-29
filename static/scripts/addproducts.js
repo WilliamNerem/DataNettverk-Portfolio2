@@ -8,13 +8,13 @@ function formSubmitted() {
     let price = document.getElementById('price').value;
     let pinfos = document.getElementById('pinfos').value;
     let pinfol = document.getElementById('pinfol').value;
-    let productimage = document.getElementById('file').files[0];
+    //let productimage = document.getElementById('file').files[0];
     const product = {
         pname: pname,
         price: price,
         pinfos: pinfos,
         pinfol: pinfol,
-        productimage: productimage
+        //productimage: productimage
     }
 
     fetch('http://127.0.0.1:5000/addproductsReal', {
