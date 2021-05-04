@@ -219,8 +219,11 @@ def addProductsReal():
         f = request.files['file']
         filename = secure_filename(f.filename)
         file_fullPath = os.path.join(app.config['UPLOAD_FOLDER'],filename)
-        f.save(file_fullPath)
-        product = ProductModel(productName=pname, price=price, productInfoShort=pinfos, productInfoLong=pinfol, productImage=file_fullPath)
+        if (file_fullPath == 'static/img\\' ):
+            product = ProductModel(productName=pname, price=price, productInfoShort=pinfos, productInfoLong=pinfol, productImage="static/img\defaultVacuum.jpg")
+        else:
+            f.save(file_fullPath)
+            product = ProductModel(productName=pname, price=price, productInfoShort=pinfos, productInfoLong=pinfol, productImage=file_fullPath)
         db.session.add(product)
         db.session.commit()
         return render_template('addproducts.html')
