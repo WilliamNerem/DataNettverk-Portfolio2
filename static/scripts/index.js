@@ -65,7 +65,9 @@ fetch('http://127.0.0.1:5000/fetchProducts')
         event.preventDefault();
         let prodId = this.value
         fetch("http://127.0.0.1:5000/shoppingcart/" + prodId)
-        checkItemsInCart()
+        sleep(10).then(() => {     
+            checkItemsInCart();
+        })
      }
 
 })
