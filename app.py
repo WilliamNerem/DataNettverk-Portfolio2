@@ -110,6 +110,14 @@ currentProduct = {}
 def renderIndex():
     return render_template('index.html')
 
+@app.route("/login", methods=['GET', 'POST'])
+def renderLogin():
+    return render_template('login.html')    
+
+@app.route("/register", methods=['GET', 'POST'])
+def renderLogin():
+    return render_template('register.html')
+
 @app.route("/fetchProducts", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def fetchProducts():
