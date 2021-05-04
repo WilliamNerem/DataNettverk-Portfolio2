@@ -115,7 +115,7 @@ def renderLogin():
     return render_template('login.html')    
 
 @app.route("/register", methods=['GET', 'POST'])
-def renderLogin():
+def renderRegister():
     return render_template('register.html')
 
 @app.route("/fetchProducts", methods=['GET', 'POST'])
