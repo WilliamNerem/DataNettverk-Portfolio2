@@ -17,6 +17,7 @@ UPLOAD_FOLDER = 'static/img'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 SQLALCHEMY_TRACK_MODIFICATIONS = False
+global admin
 
 
 @dataclass
@@ -111,11 +112,21 @@ def renderIndex():
     return render_template('index.html')
 
 @app.route("/login", methods=['GET', 'POST'])
-def renderLogin():
-    return render_template('login.html')    
+@cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
+def Login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        if username == 'Admin' and password == 'Admin':
+            admin = True
+            return render_template('index.html')
+        else: 
+            return render_template('login.html')   
+    else:
+        return render_template('login.html')        
 
 @app.route("/register", methods=['GET', 'POST'])
-def renderRegister():
+def Register():
     return render_template('register.html')
 
 @app.route("/fetchProducts", methods=['GET', 'POST'])
