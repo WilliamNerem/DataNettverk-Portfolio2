@@ -24,8 +24,8 @@ function displayCart(){
                 <h6 class="text-muted">${product.price},-</h6>
                 <div class="display-flex" id="cartButtons${product.product_id}">
                     <button class="btn-amount btn btn-outline-dark btn-sm" onclick="deleteFromCart(${product.shoppingcart_id},${product.product_id})">-</button>
-                    <span class="badge bg-dark rounded-pill" id="countInCart${product.product_id}">${count}</span>
-                    <button class="addAnotherToCart btn btn-outline-dark btn-sm btn-amount" value="${product.product_id}">+</button>
+                    <span class="badge bg-dark rounded-pill amount-of-product" id="countInCart${product.product_id}">${count}</span>
+                    <button class="btn-amount addAnotherToCart btn btn-outline-dark btn-sm" value="${product.product_id}">+</button>
                 </div>
             </li>
             `
@@ -35,9 +35,9 @@ function displayCart(){
             addedToCart.push(product.product_id)
 
             outputBtn = `
-            <button class="btn btn-outline-dark btn-sm btn-amount" onclick="deleteFromCart(${product.shoppingcart_id},${product.product_id})">-</button>
-            <span class="badge bg-dark rounded-pill" id="countInCart${product.product_id}">${count}</span>
-            <button class="addAnotherToCart btn btn-outline-dark btn-sm btn-amount" value="${product.product_id}">+</button>
+            <button class="btn-amount btn btn-outline-dark btn-sm" onclick="deleteFromCart(${product.shoppingcart_id},${product.product_id})">-</button>
+            <span class="badge bg-dark rounded-pill amount-of-product" id="countInCart${product.product_id}">${count}</span>
+            <button class="btn-amount addAnotherToCart btn btn-outline-dark btn-sm" value="${product.product_id}">+</button>
             `
 
             document.getElementById('cartButtons'+product.product_id).innerHTML = outputBtn
