@@ -1,5 +1,7 @@
-let output = ''
-let product_exists = document.getElementById('product_exists').innerHTML
+let output = '';
+let product_exists = document.getElementById('product_exists').innerHTML;
+let itemsInCart = 0;
+checkItemsInCart();
 
 if (product_exists == 'false') {
     output = `
@@ -14,7 +16,6 @@ if (product_exists == 'false') {
     fetch("http://127.0.0.1:5000/fetchCurrent")
     .then((res) => res.json())
     .then((data) => {
-        console.log(data.productImage)
         output = `
             <h1 class="display-4"> ${data.productName}</h1>
             <p class="lead">${data.productInfoLong}</p>
@@ -33,21 +34,20 @@ if (product_exists == 'false') {
             event.preventDefault();
             let prodId = this.value
             fetch("http://127.0.0.1:5000/shoppingcart/" + prodId)
-            console.log("add to cart is clicked")
             checkItemsInCart()
         }
     
-        // function checkItemsInCart(){
-        //     fetch('http://127.0.0.1:5000/shoppingcart/countItems')
-        //     .then((res) => res.json())
-        //     .then((data) => {
-        //         console.log(data.length)
-        //         itemsInCart = data.length;
-        //         document.getElementById('shoppingCart').innerHTML = `${itemsInCart}`
-        //     })
-    
-        // }
     })
     
     
+}
+
+function checkItemsInCart(){
+    fetch('http://127.0.0.1:5000/shoppingcart/countItems')
+    .then((res) => res.json())
+    .then((data) => {
+        itemsInCart = data.length;
+        document.getElementById('shoppingCart').innerHTML = `${itemsInCart}`
+    })
+
 }
