@@ -1,4 +1,7 @@
-displayCart()
+displayCart();
+let itemsInCart = 0;
+checkItemsInCart();
+
 function displayCart(){
     fetch('http://127.0.0.1:5000/shoppingcart/checkout/items')
     .then((res) => res.json())
@@ -76,4 +79,15 @@ function deleteFromCart(shoppingCart_id, product_id){
             displayCart()
         })
     }
+    checkItemsInCart();
+}
+
+function checkItemsInCart(){
+    fetch('http://127.0.0.1:5000/shoppingcart/countItems')
+    .then((res) => res.json())
+    .then((data) => {
+        itemsInCart = data.length;
+        document.getElementById('shoppingCart').innerHTML = `${itemsInCart}`
+    })
+
 }

@@ -143,7 +143,7 @@ def productDescription(product_id):
 
 @app.route("/shoppingcart", methods=['GET', 'POST'])
 def shoppingcart():
-    return render_template('testShoppingcart.html')
+    return render_template('shoppingcart.html')
 
 @app.route("/shoppingcart/<int:product_id>", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
@@ -154,11 +154,11 @@ def addToShoppingcart(product_id):
     addCartItem = ShoppingcartModel(shoppingcart_id = cartItemId.shoppingcart_id, product_id = cartItem.product_id, productName=cartItem.productName, price=cartItem.price, productInfoShort = cartItem.productInfoShort, productInfoLong = cartItem.productInfoLong, productImage = cartItem.productImage)
     db.session.add(addCartItem)
     db.session.commit()
-    return render_template('testShoppingcart.html', countCart = ShoppingcartModel.query.count())
+    return render_template('shoppingcart.html', countCart = ShoppingcartModel.query.count())
 
 @app.route("/shoppingcart/checkout", methods=['GET', 'POST'])
 def checkout():
-    return render_template('testShoppingcart.html')
+    return render_template('shoppingcart.html')
 
 @app.route("/shoppingcart/countItems", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
