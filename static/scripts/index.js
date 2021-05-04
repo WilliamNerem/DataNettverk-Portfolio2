@@ -1,6 +1,6 @@
 //idCounter = 0
-itemsInCart = 0
-checkItemsInCart()
+let itemsInCart = 0;
+checkItemsInCart();
 
 fetch('http://127.0.0.1:5000/fetchProducts')
 .then((res) => res.json())
@@ -65,7 +65,6 @@ fetch('http://127.0.0.1:5000/fetchProducts')
         event.preventDefault();
         let prodId = this.value
         fetch("http://127.0.0.1:5000/shoppingcart/" + prodId)
-        console.log("add to cart is clicked")
         checkItemsInCart()
      }
 
@@ -75,7 +74,6 @@ function checkItemsInCart(){
     fetch('http://127.0.0.1:5000/shoppingcart/countItems')
     .then((res) => res.json())
     .then((data) => {
-        console.log(data.length)
         itemsInCart = data.length;
         //idCounter = data[data.length - 1].shoppingcart_id + 1
         //console.log(idCounter)
