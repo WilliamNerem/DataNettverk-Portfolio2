@@ -5,15 +5,12 @@ services:
     build: ./backend/
     ports:
       - "5000:5000"
-    environment: 
-      - FLASK_APP=.
-      - FLASK_RUN_HOST=0.0.0.0
-      - FLASK_ENV=development
-      - FLASK_DEBUG=0
     volumes:
       - "/app.py:/var/fullstack/app.py"
       - "/static/:/var/fullstack/static"
-      - /templates:/var/fullstack/templates
+      - "/templates:/var/fullstack/templates"
+    env_file:
+      - env.dev
     links:
       - database:everything
     command: 
