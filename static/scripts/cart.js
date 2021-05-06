@@ -104,7 +104,7 @@ function displayCart() {
             })
             
             if(data.length == 0) {
-                document.getElementById('renderContent').innerHTML = output;
+                document.getElementById('renderContent').innerHTML = '<p class="text-muted">You have no items in you shopping cart!';
             }
 
             document.querySelectorAll('.addAnotherToCart').forEach(item => {
