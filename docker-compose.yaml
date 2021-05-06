@@ -1,6 +1,33 @@
 version: "3.9"
+
 services:
   web:
-    build: .
+    build: ./backend/
     ports:
       - "5000:5000"
+    environment: 
+      - FLASK_APP=.
+      - FLASK_RUN_HOST=0.0.0.0
+      - FLASK_ENV=development
+      - FLASK_DEBUG=0
+    volumes:
+      - "/app.py:/var/fullstack/app.py"
+      - "/static/:/var/fullstack/static"
+      - /templates:/var/fullstack/templates
+    links:
+      - database:everything
+    command: 
+      flask run
+
+  database:
+    build:
+      ./database/
+    ports:
+      - "3306:3306"
+    environment: 
+      - "MYSQL_ROOT_PASSWORD=root"
+      - "MYSQL_PASSWORD=supersecretpasswd"
+    volumes: 
+      - "/mysql:/docker-entrypoint-initdb.d"
+
+  

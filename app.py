@@ -6,10 +6,26 @@ import os
 from dataclasses import dataclass
 from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
+import mysql.connector
+
+mysql_user = 'neremzky'
+mysql_pwd = 'password'
+mysql_host = 'my-mysql'
+mysql_db = 'everything'
+
+mydb = mysql.connector.connect(user = mysql_user, password = mysql_pwd, host = mysql_host, database = mysql_db)
+
+mycursor = mydb.cursor()
+mycursor.execute("SELECT * FROM products")
+myresult = mycursor.fetchall()
+
+print('dette er mysql babyyy')
+for i, name, price, infoshort, infolong, image in myresult:
+    print("ID: {}, Name: {}, price: {}, infoshort: {}, infolong: {}, image: {}".format(i, name, price, infoshort, infolong, image))
 
 app = Flask(__name__)
 api = Api(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'     #/var/run/mysqld/mysqld.sock
 app.config['CORS_HEADERS'] = 'Content-Type'
 db = SQLAlchemy(app)
 cors = CORS(app, resources={r"/": {"origins": "http://127.0.0.1:5000/"}})
@@ -133,7 +149,7 @@ def Register():
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def fetchProducts():
     productReturn = ProductModel.query.all()
-    return jsonify(productReturn)
+    return jsonify(myresult)
 
 @app.route("/fetchCurrent", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
@@ -230,4 +246,5 @@ def addProductsReal():
     else:
         return render_template('addproducts.html')
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0") #debug=True
+    mydb.close()
