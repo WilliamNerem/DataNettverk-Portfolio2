@@ -34,7 +34,9 @@ if (product_exists == 'false') {
             event.preventDefault();
             let prodId = this.value
             fetch("http://127.0.0.1:5000/shoppingcart/" + prodId)
-            checkItemsInCart()
+            .then(() => {     
+                checkItemsInCart();
+            })
         }
     
     })

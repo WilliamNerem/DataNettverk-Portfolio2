@@ -34,3 +34,47 @@
 .amount-of-product {
     margin: 5px;
 }
+
+.cart-price .text-muted {
+    margin: auto;
+}
+
+.cart-price {
+    margin: 0.5rem;
+}
+
+.checkout-container {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    overflow: hidden;
+}
+
+.checkout-container p{
+    font-size: small;
+    float: right;
+    margin: 0;
+}
+
+.checkout-content{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+    padding-right: 8px;
+}
+
+.checkout-content div{
+    margin-right: 1rem;
+    font-size: 1.25rem;
+}
+
+hr.solid {
+    border-top: 3px solid #bbb;
+    width: 100%;
+  }
+
+.discount-container p{
+    font-size: small;
+    margin: 0;
+}
