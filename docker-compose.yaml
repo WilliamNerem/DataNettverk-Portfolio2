@@ -15,6 +15,7 @@ services:
       - database:everything
     depends_on: 
       - database
+    restart: always
 
   database:
     build:

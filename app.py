@@ -17,7 +17,10 @@ mydb = mysql.connector.connect(user = mysql_user, password = mysql_pwd, host = m
 
 mycursor = mydb.cursor()
 mycursor.execute("SELECT * FROM products")
+
+row_headers=[x[0] for x in mycursor.description]
 myresult = mycursor.fetchall()
+
 
 print('dette er mysql babyyy')
 for i, name, price, infoshort, infolong, image in myresult:
@@ -29,7 +32,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'     #/var/run/my
 app.config['CORS_HEADERS'] = 'Content-Type'
 db = SQLAlchemy(app)
 cors = CORS(app, resources={r"/": {"origins": "http://127.0.0.1:5000/"}})
-UPLOAD_FOLDER = 'static/img'
+UPLOAD_FOLDER = 'home/static/img'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -118,7 +121,7 @@ def addProducts():
 
 db.drop_all()
 db.create_all()
-addProducts()
+#addProducts()
 
 currentProduct = {}
 
@@ -148,8 +151,11 @@ def Register():
 @app.route("/fetchProducts", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def fetchProducts():
+    json_data=[]
+    for result in myresult:
+        json_data.append(dict(zip(row_headers,result)))
     productReturn = ProductModel.query.all()
-    return jsonify(productReturn)
+    return jsonify(json_data)
 
 @app.route("/fetchCurrent", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
@@ -242,14 +248,24 @@ def addProductsReal():
         pinfol = request.form['pinfol']
         f = request.files['file']
         filename = secure_filename(f.filename)
+        filepath = 'static/img/'+filename
         file_fullPath = os.path.join(app.config['UPLOAD_FOLDER'],filename)
-        if (file_fullPath == 'static/img\\' ):
-            product = ProductModel(productName=pname, price=price, productInfoShort=pinfos, productInfoLong=pinfol, productImage="static/img\defaultVacuum.jpg")
+        print(file_fullPath)
+        if (file_fullPath == 'home/static/img/' ):
+            sql = """INSERT INTO products (productName, price, productInfoShort, productInfoLong, productImage) VALUES (%s, %s, %s, %s, %s)"""
+            val = (pname, price, pinfos, pinfol, 'static/img/defaultVacuum.jpg')
+            mycursor.execute(sql, val)
+            mydb.commit()
+            #product = ProductModel(productName=pname, price=price, productInfoShort=pinfos, productInfoLong=pinfol, productImage="static/img\defaultVacuum.jpg")
         else:
             f.save(file_fullPath)
-            product = ProductModel(productName=pname, price=price, productInfoShort=pinfos, productInfoLong=pinfol, productImage=file_fullPath)
-        db.session.add(product)
-        db.session.commit()
+            sql = """INSERT INTO products (productName, price, productInfoShort, productInfoLong, productImage) VALUES (%s, %s, %s, %s, %s)"""
+            val = (pname, price, pinfos, pinfol, filepath)
+            mycursor.execute(sql, val)
+            mydb.commit()
+            #product = ProductModel(productName=pname, price=price, productInfoShort=pinfos, productInfoLong=pinfol, productImage=file_fullPath)
+        #db.session.add(product)
+        #db.session.commit()
         return render_template('addproducts.html')
     else:
         return render_template('addproducts.html')
