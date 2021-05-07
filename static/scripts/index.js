@@ -81,6 +81,7 @@ function checkItemsInCart(){
     .then((res) => res.json())
     .then((data) => {
         itemsInCart = data.length;
+        console.log(data)
         document.getElementById('shoppingCart').innerHTML = `${itemsInCart}`
     })
 

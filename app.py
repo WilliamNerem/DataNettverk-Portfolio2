@@ -124,6 +124,7 @@ db.create_all()
 #addProducts()
 
 currentProduct = {}
+json_data = []
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -151,6 +152,7 @@ def Register():
 @app.route("/fetchProducts", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def fetchProducts():
+    global json_data
     json_data=[]
     for result in myresult:
         json_data.append(dict(zip(row_headers,result)))
@@ -167,8 +169,11 @@ def fetchCurrent():
 def productDescription(product_id):
     global currentProduct
     try:
-        productReturn = ProductModel.query.all()
-        currentProduct = productReturn[product_id-1]
+        json_data=[]
+        for result in myresult:
+            json_data.append(dict(zip(row_headers,result)))
+        #productReturn = ProductModel.query.all()
+        currentProduct = json_data[product_id-1]
         return render_template('product.html')
     except:
         product_exists = "false"
@@ -181,13 +186,36 @@ def shoppingcart():
 @app.route("/shoppingcart/<int:product_id>", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def addToShoppingcart(product_id):
-    cartItemId = ShoppingcartModel(product_id = product_id)
-    products = ProductModel.query.all()
-    cartItem = products[product_id-1]
-    addCartItem = ShoppingcartModel(shoppingcart_id = cartItemId.shoppingcart_id, product_id = cartItem.product_id, productName=cartItem.productName, price=cartItem.price, productInfoShort = cartItem.productInfoShort, productInfoLong = cartItem.productInfoLong, productImage = cartItem.productImage)
-    db.session.add(addCartItem)
-    db.session.commit()
-    return render_template('shoppingcart.html', countCart = ShoppingcartModel.query.count())
+    global json_data
+    for result in myresult:
+        json_data.append(dict(zip(row_headers,result)))
+
+    mycursor.execute("SELECT * FROM cartItems where product_id="+str(product_id))
+
+    cartrow_headers=[x[0] for x in mycursor.description]
+    cartresult = mycursor.fetchall()
+
+    items = json_data[product_id-1]
+    itemValues = list(items.values())
+    print(itemValues)
+
+    cart_data=[]
+    for result in cartresult:
+        json_data.append(dict(zip(row_headers,result)))
+
+    #cartItemId = ShoppingcartModel(product_id = product_id)
+    #products = ProductModel.query.all()
+
+    sql = """INSERT INTO cartItems (product_id, productName, price, productInfoShort, productInfoLong, productImage) VALUES (%s, %s, %s, %s, %s, %s)"""
+    val = (itemValues[0], itemValues[1], itemValues[2], itemValues[3], itemValues[4], itemValues[5])
+    mycursor.execute(sql, val)
+    mydb.commit()
+
+    #cartItem = json_data[product_id-1]
+    # addCartItem = ShoppingcartModel(shoppingcart_id = cartItemId.shoppingcart_id, product_id = cartItem.product_id, productName=cartItem.productName, price=cartItem.price, productInfoShort = cartItem.productInfoShort, productInfoLong = cartItem.productInfoLong, productImage = cartItem.productImage)
+    # db.session.add(addCartItem)
+    # db.session.commit()
+    return render_template('shoppingcart.html', countCart = len(json_data))
 
 @app.route("/shoppingcart/checkout", methods=['GET', 'POST'])
 def checkout():
@@ -196,14 +224,37 @@ def checkout():
 @app.route("/shoppingcart/countItems", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def checkNumberOfItems():    
-    returnArray = ShoppingcartModel.query.all()
-    return jsonify(returnArray)
+    cartJson_data = []
+    mycursor.execute("SELECT * FROM cartItems")
+
+    cartrow_headers=[x[0] for x in mycursor.description]
+    cartitems = mycursor.fetchall()
+
+    for result in myresult:
+        cartJson_data.append(dict(zip(row_headers,result)))
+
+    return jsonify(cartJson_data)
+
+    # returnArray = ShoppingcartModel.query.all()
+    # return jsonify(returnArray)
 
 @app.route("/shoppingcart/checkout/items", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def checkoutItems():
-    returnArray = ShoppingcartModel.query.all()
-    return jsonify(returnArray)
+
+    cartJson_data = []
+    mycursor.execute("SELECT * FROM cartItems")
+
+    cartrow_headers=[x[0] for x in mycursor.description]
+    cartitems = mycursor.fetchall()
+
+    for result in myresult:
+        cartJson_data.append(dict(zip(row_headers,result)))
+
+    return jsonify(cartJson_data)
+
+    # returnArray = ShoppingcartModel.query.all()
+    # return jsonify(returnArray)
 
 @app.route("/shoppingcart/remove/<int:shoppingcart_id>", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
