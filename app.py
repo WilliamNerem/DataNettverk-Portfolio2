@@ -204,7 +204,7 @@ def fetchProducts():
     json_data=[]
     for result in myresult:
         json_data.append(dict(zip(row_headers,result)))
-    productReturn = ProductModel.query.all()
+    #productReturn = ProductModel.query.all()
     return jsonify(json_data)
 
 @app.route("/fetchCurrent", methods=['GET', 'POST'])
@@ -216,6 +216,7 @@ def fetchCurrent():
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def productDescription(product_id):
     global currentProduct
+    global json_data
     try:
         json_data=[]
         for result in myresult:
@@ -272,19 +273,19 @@ def checkout():
 @app.route("/shoppingcart/countItems", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def checkNumberOfItems():    
-    cartJson_data = []
-    mycursor.execute("SELECT * FROM cartItems")
+    # cartJson_data = []
+    # mycursor.execute("SELECT * FROM cartItems")
 
-    cartrow_headers=[x[0] for x in mycursor.description]
-    cartitems = mycursor.fetchall()
+    # cartrow_headers=[x[0] for x in mycursor.description]
+    # cartitems = mycursor.fetchall()
 
-    for result in myresult:
-        cartJson_data.append(dict(zip(row_headers,result)))
+    # for result in myresult:
+    #     cartJson_data.append(dict(zip(row_headers,result)))
 
-    return jsonify(cartJson_data)
+    # return jsonify(cartJson_data)
 
-    # returnArray = ShoppingcartModel.query.all()
-    # return jsonify(returnArray)
+    returnArray = ShoppingcartModel.query.all()
+    return jsonify(returnArray)
 
 @app.route("/shoppingcart/checkout/items", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
