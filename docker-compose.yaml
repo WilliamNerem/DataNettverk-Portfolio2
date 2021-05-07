@@ -6,15 +6,13 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - "/app.py:/var/fullstack/app.py"
-      - "/static/:/var/fullstack/static"
-      - "/templates:/var/fullstack/templates"
+      - "./app.py:/home/app.py"
+      - "./static/:/home/static"
+      - "./templates:/home/templates"
     env_file:
       - env.dev
     links:
       - database:everything
-    command: 
-      flask run
 
   database:
     build:

@@ -6,22 +6,22 @@ import os
 from dataclasses import dataclass
 from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
-# import mysql.connector
+import mysql.connector
 
-# mysql_user = 'neremzky'
-# mysql_pwd = 'password'
-# mysql_host = 'my-mysql'
-# mysql_db = 'everything'
+mysql_user = 'neremzky'
+mysql_pwd = 'password'
+mysql_host = 'datanettverk-portfolio2_database_1'
+mysql_db = 'everything'
 
-# mydb = mysql.connector.connect(user = mysql_user, password = mysql_pwd, host = mysql_host, database = mysql_db)
+mydb = mysql.connector.connect(user = mysql_user, password = mysql_pwd, host = mysql_host, database = mysql_db)
 
-# mycursor = mydb.cursor()
-# mycursor.execute("SELECT * FROM products")
-# myresult = mycursor.fetchall()
+mycursor = mydb.cursor()
+mycursor.execute("SELECT * FROM products")
+myresult = mycursor.fetchall()
 
-# print('dette er mysql babyyy')
-# for i, name, price, infoshort, infolong, image in myresult:
-#     print("ID: {}, Name: {}, price: {}, infoshort: {}, infolong: {}, image: {}".format(i, name, price, infoshort, infolong, image))
+print('dette er mysql babyyy')
+for i, name, price, infoshort, infolong, image in myresult:
+    print("ID: {}, Name: {}, price: {}, infoshort: {}, infolong: {}, image: {}".format(i, name, price, infoshort, infolong, image))
 
 app = Flask(__name__)
 api = Api(app)
