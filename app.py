@@ -8,8 +8,8 @@ from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 import mysql.connector
 
-mysql_user = 'neremzky'
-mysql_pwd = 'password'
+mysql_user = 'root'
+mysql_pwd = 'root'
 mysql_host = 'datanettverk-portfolio2_database_1'
 mysql_db = 'everything'
 
@@ -18,6 +18,8 @@ mydb = mysql.connector.connect(user = mysql_user, password = mysql_pwd, host = m
 mycursor = mydb.cursor()
 mycursor.execute("SELECT * FROM products")
 myresult = mycursor.fetchall()
+statement = """CREATE USER 'exemplar'@'localhost' IDENTIFIED BY 'MoreSecurity'"""
+mycursor.execute(statement)
 
 print('dette er mysql babyyy')
 for i, name, price, infoshort, infolong, image in myresult:

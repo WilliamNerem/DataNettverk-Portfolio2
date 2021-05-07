@@ -28,8 +28,10 @@ VALUES ('Shark NV352', 1799, 'Lift Away Upright Vacuum with Wide Upholstery and 
 
 SELECT * FROM products;
 
+USE mysql
+
 CREATE USER 'neremzky' IDENTIFIED BY 'password';
-# GRANT SELECT ON products TO 'neremzky';
-# GRANT SELECT ON cartitems TO 'neremzky';
+#GRANT SELECT ON products TO 'neremzky';
+#GRANT SELECT ON cartitems TO 'neremzky';
 GRANT ALL PRIVILEGES ON *.* TO 'neremzky';
 
