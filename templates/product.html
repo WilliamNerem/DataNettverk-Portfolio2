@@ -31,7 +31,8 @@
                     </a>
                 </div>
             </div>
-            <a class="nav-link float-end" href="http://127.0.0.1:5000/login">Log in/Register</a>
+            <span id="loginLink"></span>
+            <div id="currentUser" style="display: none;">{{currentUser.username}}</div>
         </div>
     </nav>  
     
@@ -43,6 +44,7 @@
     </div>
     
     <script src="{{ url_for('static', filename='scripts/product.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/common.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
 </body>
 </html>
