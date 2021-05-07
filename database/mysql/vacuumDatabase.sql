@@ -1,7 +1,7 @@
-CREATE DATABASE everything;
+CREATE DATABASE IF NOT EXISTS everything;
 USE everything;
 
-CREATE TABLE products(
+CREATE TABLE IF NOT EXISTS products(
     product_id          INT NOT NULL AUTO_INCREMENT,
     productName         VARCHAR(100) NOT NULL,
     price               INT NOT NULL,
@@ -11,7 +11,7 @@ CREATE TABLE products(
     PRIMARY KEY         (product_id)
 );
 
-CREATE TABLE cartItems(
+CREATE TABLE IF NOT EXISTS cartItems(
     shoppingcart_id     INT NOT NULL AUTO_INCREMENT,
     product_id          INT NOT NULL,
     productName         VARCHAR(100) NOT NULL,
@@ -30,7 +30,7 @@ SELECT * FROM products;
 
 USE mysql
 
-CREATE USER 'neremzky' IDENTIFIED BY 'password';
+CREATE USER IF NOT EXISTS 'neremzky' IDENTIFIED BY 'password';
 #GRANT SELECT ON products TO 'neremzky';
 #GRANT SELECT ON cartitems TO 'neremzky';
 GRANT ALL PRIVILEGES ON *.* TO 'neremzky';

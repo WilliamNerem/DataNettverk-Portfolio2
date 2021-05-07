@@ -25,6 +25,6 @@ services:
       - "MYSQL_ROOT_PASSWORD=root"
       - "MYSQL_PASSWORD=supersecretpasswd"
     volumes: 
-      - "/mysql:/docker-entrypoint-initdb.d"
+      - "./database/mysql/:/docker-entrypoint-initdb.d"
 
   
