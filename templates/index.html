@@ -31,7 +31,8 @@
                     </a>
                 </div>
             </div>
-            <a class="nav-link float-end" href="http://127.0.0.1:5000/login">Log in/Register</a>
+            <span id="loginLink"></span>
+            <div id="currentUser" style="display: none;">{{currentUser.username}}</div>
         </div>
     </nav>
 
@@ -41,7 +42,7 @@
 
         </div>
     </div>
-
     <script src="{{ url_for('static', filename='scripts/index.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/common.js') }}"></script>
 </body>
 </html>

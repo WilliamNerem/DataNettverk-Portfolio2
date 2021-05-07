@@ -84,6 +84,34 @@ class ShoppingcartModel(db.Model):
     productInfoLong = db.Column(db.String(1000), nullable=False)
     productImage = db.Column(db.String(100), nullable=False)
 
+@dataclass
+class UserModel(db.Model):
+    __tablename__='users'
+
+    user_id: int
+    username: str
+    firstname: str
+    lastname: str
+    email: str
+    phone: str
+    password: str
+
+    user_id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(30), nullable=False)
+    firstname = db.Column(db.String(30), nullable=False)
+    lastname = db.Column(db.String(30), nullable=False)
+    email = db.Column(db.String(100), nullable=False)
+    phone = db.Column(db.String(10), nullable=False)
+    password = db.Column(db.String(30), nullable=False)
+
+def addAdmin():
+    user_id1 = UserModel(username='Admin')
+    adminUser = UserModel(user_id=user_id1.user_id, username=user_id1.username, firstname='Admin', lastname='Admin', email='admin@admin.com', phone='12345678', password='Admin')
+
+    db.session.add(adminUser)
+    db.session.commit()
+    
+
 def addProducts():
     product_id1 = ProductModel(productName='Shark NV352')
     product1 = ProductModel(product_id=product_id1.product_id, productName=product_id1.productName, price=1799, productInfoShort='Lift Away Upright Vacuum with Wide Upholstery and Crevice Tools, Lavender', productInfoLong='Lift-Away: Lift Away the detachable pod and easily clean, above-floor areas like stairs and furniture. Anti-Allergen Complete Seal Technology and a HEPA filter trap dust and allergens inside the vacuum. Powerful, lightweight, and versatile at only 14 lbs. Brushroll shutoff allows you to instantly switch from deep carpet cleaning to gentle bare floor cleaning. Swivel Steering for excellent control to maneuver around furniture. Upholstery Tool, and two lengths of Crevice Tool included for versatile cleaning.', productImage='static/img/SharkNV352.jpg')
@@ -122,31 +150,48 @@ def addProducts():
 db.drop_all()
 db.create_all()
 #addProducts()
+addAdmin()
 
 currentProduct = {}
+currentUser = {}
 
 
 @app.route("/", methods=['GET', 'POST'])
 def renderIndex():
-    return render_template('index.html')
+    return render_template('index.html', currentUser = currentUser)
 
 @app.route("/login", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
-def Login():
+def login():
+    global currentUser
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+        reqdata = request.get_json()
+        username = reqdata['username']
+        password = reqdata['password']
         if username == 'Admin' and password == 'Admin':
+            currentUser = UserModel.query.filter_by(username = username).first()
+            db.session.commit()
             admin = True
-            return render_template('index.html')
+            return jsonify(currentUser)
         else: 
-            return render_template('login.html')   
+            return render_template('login.html', currentUser = currentUser)   
     else:
-        return render_template('login.html')        
+        return render_template('login.html', currentUser = currentUser)
+
+@app.route("/logout", methods=['GET', 'POST'])
+@cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
+def logout():
+    global currentUser
+    currentUser = {}
+    return render_template('index.html', currentUser = currentUser)
 
 @app.route("/register", methods=['GET', 'POST'])
-def Register():
-    return render_template('register.html')
+def register():
+    return render_template('register.html', currentUser = currentUser)
+
+@app.route("/profile", methods=['GET', 'POST'])
+def profile():
+    return render_template('profile.html', currentUser = currentUser)
 
 @app.route("/fetchProducts", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
@@ -169,14 +214,14 @@ def productDescription(product_id):
     try:
         productReturn = ProductModel.query.all()
         currentProduct = productReturn[product_id-1]
-        return render_template('product.html')
+        return render_template('product.html', currentUser = currentUser)
     except:
         product_exists = "false"
-        return render_template('product.html', product_exists = product_exists)
+        return render_template('product.html', product_exists = product_exists, currentUser = currentUser)
 
 @app.route("/shoppingcart", methods=['GET', 'POST'])
 def shoppingcart():
-    return render_template('shoppingcart.html')
+    return render_template('shoppingcart.html', currentUser = currentUser)
 
 @app.route("/shoppingcart/<int:product_id>", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
@@ -187,7 +232,7 @@ def addToShoppingcart(product_id):
     addCartItem = ShoppingcartModel(shoppingcart_id = cartItemId.shoppingcart_id, product_id = cartItem.product_id, productName=cartItem.productName, price=cartItem.price, productInfoShort = cartItem.productInfoShort, productInfoLong = cartItem.productInfoLong, productImage = cartItem.productImage)
     db.session.add(addCartItem)
     db.session.commit()
-    return render_template('shoppingcart.html', countCart = ShoppingcartModel.query.count())
+    return render_template('shoppingcart.html', countCart = ShoppingcartModel.query.count(), currentUser = currentUser)
 
 @app.route("/shoppingcart/checkout", methods=['GET', 'POST'])
 def checkout():
@@ -223,7 +268,7 @@ def completePayment(paymentSuccessful):
 
 @app.route("/addproducts", methods=['GET', 'POST'])
 def addproductsyup():
-    return render_template('addproducts.html')
+    return render_template('addproducts.html', currentUser = currentUser)
 
 @app.route('/form')
 def form():
@@ -266,9 +311,11 @@ def addProductsReal():
             #product = ProductModel(productName=pname, price=price, productInfoShort=pinfos, productInfoLong=pinfol, productImage=file_fullPath)
         #db.session.add(product)
         #db.session.commit()
-        return render_template('addproducts.html')
+        return render_template('addproducts.html', currentUser = currentUser)
     else:
-        return render_template('addproducts.html')
+        return render_template('addproducts.html', currentUser = currentUser)
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)
     mydb.close()
