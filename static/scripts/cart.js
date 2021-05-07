@@ -1,6 +1,5 @@
 displayCart();
 let itemsInCart = 0;
-checkItemsInCart();
 let totalPrice = 0;
 const discountForm = document.getElementById('discount-form');
 const discountCode = document.getElementById('discount-code');
@@ -54,9 +53,9 @@ completePayment.onclick = () => {
         .then((data) => {})
         .then(() => {
             displayCart();
-            checkItemsInCart();
         })
         .catch((error) => console.log(error))
+        
 }
 
 function displayCart() {
@@ -65,6 +64,7 @@ function displayCart() {
         .then((data) => {
             let output = ``
             let addedToCart = []
+            console.log(data)
 
             data.forEach(function (product) {
                 let count = 0
@@ -81,7 +81,7 @@ function displayCart() {
                     <span class="display-flex cart-price">
                         <div class="display-flex"><h6 class="text-muted">${product.price},-</h6></div>
                         <div class="display-flex" id="cartButtons${product.product_id}">
-                            <button class="btn-amount btn btn-outline-dark btn-sm" onclick="deleteFromCart(${product.shoppingcart_id},${product.product_id})">-</button>
+                            <button class="btn-amount deleteItemFromCart btn btn-outline-dark btn-sm" value="${product.shoppingcart_id}" value1="${product.product_id}">-</button>
                             <span class="badge bg-dark rounded-pill amount-of-product" id="countInCart${product.product_id}">${count}</span>
                             <button class="btn-amount addAnotherToCart btn btn-outline-dark btn-sm" value="${product.product_id}">+</button>
                         </div>
@@ -94,7 +94,7 @@ function displayCart() {
                     addedToCart.push(product.product_id)
 
                     outputBtn = `
-                <button class="btn-amount btn btn-outline-dark btn-sm" onclick="deleteFromCart(${product.shoppingcart_id},${product.product_id})">-</button>
+                <button class="btn-amount deleteItemFromCart btn btn-outline-dark btn-sm" value="${product.shoppingcart_id}" value1="${product.product_id}">-</button>
                 <span class="badge bg-dark rounded-pill amount-of-product" id="countInCart${product.product_id}">${count}</span>
                 <button class="btn-amount addAnotherToCart btn btn-outline-dark btn-sm" value="${product.product_id}">+</button>
                 `
@@ -111,18 +111,35 @@ function displayCart() {
                 item.addEventListener('click', addToCart)
             })
 
+            document.querySelectorAll('.deleteItemFromCart').forEach(item => {
+                item.addEventListener('click', deleteItemFromCart)
+            })
+
+            function deleteItemFromCart() {
+                event.preventDefault();
+                let cartId = this.value
+                let prodId = this.value1
+                console.log(prodId)
+                fetch('http://127.0.0.1:5000/shoppingcart/remove/' + cartId)
+                .then(() => {
+                    displayCart();
+                    if (document.getElementById('countInCart' + prodId).innerHTML == '1') {
+                        document.getElementById("cartId" + cartId).remove();
+                    }
+                })
+                
+            }
+
             function addToCart() {
                 event.preventDefault();
                 let prodId = this.value
                 fetch("http://127.0.0.1:5000/shoppingcart/" + prodId)
                 .then(() => {
                     displayCart();
-                    checkItemsInCart();
                 })
             }
+            checkItemsInCart();
         })
-
-
 }
 
 function deleteFromCart(shoppingCart_id, product_id) {
@@ -133,9 +150,6 @@ function deleteFromCart(shoppingCart_id, product_id) {
     } else {
         sleep(10).then(() => {
             displayCart();
-        })
-        sleep(10).then(() => {
-            checkItemsInCart();
         })
     }
     sleep(10).then(() => {
@@ -155,10 +169,6 @@ function checkItemsInCart() {
                 totalPrice += product.price;
             })
             document.getElementById('total-price').innerHTML = 'Total: ' + totalPrice + ',-';
-
         })
 
 }
-sleep(10).then(() => {
-    checkItemsInCart();
-})

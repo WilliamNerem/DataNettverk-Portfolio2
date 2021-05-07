@@ -275,7 +275,6 @@ def checkNumberOfItems():
     cartJson_data = []
     mycursor = mydb.cursor(buffered=True)
     mycursor.execute("SELECT * FROM cartItems")
-    mydb.commit()
     
     cartrow_headers=[x[0] for x in mycursor.description]
     cartitems = mycursor.fetchall()
@@ -291,17 +290,15 @@ def checkNumberOfItems():
 @app.route("/shoppingcart/checkout/items", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def checkoutItems():
-
     cartJson_data = []
+    mycursor = mydb.cursor(buffered=True)
     mycursor.execute("SELECT * FROM cartItems")
-    mydb.commit()
 
     cartrow_headers=[x[0] for x in mycursor.description]
     cartitems = mycursor.fetchall()
 
-    for result in myresult:
-        cartJson_data.append(dict(zip(row_headers,result)))
-
+    for result in cartitems:
+        cartJson_data.append(dict(zip(cartrow_headers,result)))
     return jsonify(cartJson_data)
 
     # returnArray = ShoppingcartModel.query.all()
@@ -310,17 +307,39 @@ def checkoutItems():
 @app.route("/shoppingcart/remove/<int:shoppingcart_id>", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def removeCheckoutItems(shoppingcart_id):
-    ShoppingcartModel.query.filter_by(shoppingcart_id = shoppingcart_id).delete()
-    db.session.commit()
-    cartReturn = ShoppingcartModel.query.all()
-    return jsonify(cartReturn)
+    sql = """DELETE FROM cartItems where shoppingcart_id="""+str(shoppingcart_id)
+    mycursor = mydb.cursor(buffered=True)
+    mycursor.execute(sql)
+    mycursor.close()
+    mydb.commit()
+    cartJson_data = []
+    mycursor = mydb.cursor(buffered=True)
+    mycursor.execute("SELECT * FROM cartItems")
+
+    cartrow_headers=[x[0] for x in mycursor.description]
+    cartitems = mycursor.fetchall()
+
+    for result in cartitems:
+        cartJson_data.append(dict(zip(cartrow_headers,result)))
+    return jsonify(cartJson_data)
+
+    # ShoppingcartModel.query.filter_by(shoppingcart_id = shoppingcart_id).delete()
+    # db.session.commit()
+    # cartReturn = ShoppingcartModel.query.all()
+    # return jsonify(cartReturn)
 
 @app.route("/payment/complete/<string:paymentSuccessful>", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def completePayment(paymentSuccessful):
     if paymentSuccessful == 'true':
-        ShoppingcartModel.query.delete()
-        db.session.commit()
+
+        sql = """DELETE FROM cartItems"""
+        mycursor = mydb.cursor(buffered=True)
+        mycursor.execute(sql)
+        mycursor.close()
+        mydb.commit()
+        # ShoppingcartModel.query.delete()
+        # db.session.commit()
     return paymentSuccessful
 
 @app.route("/addproducts", methods=['GET', 'POST'])

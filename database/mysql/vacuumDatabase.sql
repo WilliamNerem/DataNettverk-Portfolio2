@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS cartItems(
     productImage        VARCHAR(300) NOT NULL,
     PRIMARY KEY         (shoppingcart_id)
 );
-
+#
 INSERT INTO products (productName, price, productInfoShort, productInfoLong, productImage) 
 VALUES ('Shark NV352', 1799, 'Lift Away Upright Vacuum with Wide Upholstery and Crevice Tools, Lavender', 'Lift-Away: Lift Away the detachable pod and easily clean, above-floor areas like stairs and furniture. Anti-Allergen Complete Seal Technology and a HEPA filter trap dust and allergens inside the vacuum. Powerful, lightweight, and versatile at only 14 lbs. Brushroll shutoff allows you to instantly switch from deep carpet cleaning to gentle bare floor cleaning. Swivel Steering for excellent control to maneuver around furniture. Upholstery Tool, and two lengths of Crevice Tool included for versatile cleaning.', 'static/img/SharkNV352.jpg');
 
