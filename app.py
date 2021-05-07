@@ -15,16 +15,11 @@ mysql_db = 'everything'
 
 mydb = mysql.connector.connect(user = mysql_user, password = mysql_pwd, host = mysql_host, database = mysql_db, autocommit=True)
 
-mycursor = mydb.cursor()
+mycursor = mydb.cursor(buffered=True)
 mycursor.execute("SELECT * FROM products")
 
 row_headers=[x[0] for x in mycursor.description]
 myresult = mycursor.fetchall()
-
-
-print('dette er mysql babyyy')
-for i, name, price, infoshort, infolong, image in myresult:
-    print("ID: {}, Name: {}, price: {}, infoshort: {}, infolong: {}, image: {}".format(i, name, price, infoshort, infolong, image))
 
 app = Flask(__name__)
 api = Api(app)
@@ -197,8 +192,9 @@ def profile():
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def fetchProducts():
     global json_data
-    mycursor = mydb.cursor()
+    mycursor = mydb.cursor(buffered=True)
     mycursor.execute("SELECT * FROM products")
+    mydb.commit()
     row_headers=[x[0] for x in mycursor.description]
     myresult = mycursor.fetchall()
     json_data=[]
@@ -219,11 +215,14 @@ def productDescription(product_id):
     global json_data
     try:
         json_data=[]
+        mycursor.execute("SELECT * FROM products")
+        myresult = mycursor.fetchall()
         for result in myresult:
             json_data.append(dict(zip(row_headers,result)))
         #productReturn = ProductModel.query.all()
         currentProduct = json_data[product_id-1]
-        return render_template('product.html')
+        product_exists = "true"
+        return render_template('product.html', product_exists = product_exists, currentUser = currentUser)
     except:
         product_exists = "false"
         return render_template('product.html', product_exists = product_exists, currentUser = currentUser)
@@ -273,19 +272,21 @@ def checkout():
 @app.route("/shoppingcart/countItems", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def checkNumberOfItems():    
-    # cartJson_data = []
-    # mycursor.execute("SELECT * FROM cartItems")
+    cartJson_data = []
+    mycursor = mydb.cursor(buffered=True)
+    mycursor.execute("SELECT * FROM cartItems")
+    mydb.commit()
+    
+    cartrow_headers=[x[0] for x in mycursor.description]
+    cartitems = mycursor.fetchall()
 
-    # cartrow_headers=[x[0] for x in mycursor.description]
-    # cartitems = mycursor.fetchall()
+    for result in cartitems:
+        cartJson_data.append(dict(zip(cartrow_headers,result)))
 
-    # for result in myresult:
-    #     cartJson_data.append(dict(zip(row_headers,result)))
+    return jsonify(cartJson_data)
 
-    # return jsonify(cartJson_data)
-
-    returnArray = ShoppingcartModel.query.all()
-    return jsonify(returnArray)
+    # returnArray = ShoppingcartModel.query.all()
+    # return jsonify(returnArray)
 
 @app.route("/shoppingcart/checkout/items", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
@@ -293,6 +294,7 @@ def checkoutItems():
 
     cartJson_data = []
     mycursor.execute("SELECT * FROM cartItems")
+    mydb.commit()
 
     cartrow_headers=[x[0] for x in mycursor.description]
     cartitems = mycursor.fetchall()
@@ -350,7 +352,6 @@ def addProductsReal():
         filename = secure_filename(f.filename)
         filepath = 'static/img/'+filename
         file_fullPath = os.path.join(app.config['UPLOAD_FOLDER'],filename)
-        print(file_fullPath)
         if (file_fullPath == 'home/static/img/' ):
             sql = """INSERT INTO products (productName, price, productInfoShort, productInfoLong, productImage) VALUES (%s, %s, %s, %s, %s)"""
             val = (pname, price, pinfos, pinfol, 'static/img/defaultVacuum.jpg')

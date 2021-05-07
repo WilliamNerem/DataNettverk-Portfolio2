@@ -1,6 +1,5 @@
 //idCounter = 0
 let itemsInCart = 0;
-checkItemsInCart();
 
 const sleep = (milliseconds) => {
     return new Promise(resolve => setTimeout(resolve, milliseconds))
@@ -73,6 +72,7 @@ fetch('http://127.0.0.1:5000/fetchProducts')
             checkItemsInCart();
         })
      }
+     checkItemsInCart();
 
 })
 
@@ -81,7 +81,6 @@ function checkItemsInCart(){
     .then((res) => res.json())
     .then((data) => {
         itemsInCart = data.length;
-        console.log(data)
         document.getElementById('shoppingCart').innerHTML = `${itemsInCart}`
     })
 
