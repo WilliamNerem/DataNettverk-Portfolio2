@@ -34,11 +34,11 @@ VALUES
 ('Shark ION Robot Vacuum AV752', 2099, 'Robot vacuum with three brush types', 'Wi-Fi Connected, 120min Runtime, Works with Alexa, Multi-Surface Cleaning, White', 'static/img/SharkIONRobotVacuumAV752.jpg'),
 ('GOOVI 1600PA', 1729, 'Robotic Vacuum Cleaner with Self-Charging', '360° Smart Sensor Protectio, Multiple Cleaning Modes Vacuum Best for Pet Hairs, Hard Floor & Medium Carpet', 'static/img/GOOVI1600PA.jpg'),
 ('Coredy R750', 2999, 'Robot Vacuum Cleaner, Compatible with Alexa', 'Mopping System, Boost Intellect, Virtual Boundary Supported, 2000Pa Suction, Super-Thin, Upgraded Robotic Vacuums, Cleans Hard Floor to Carpet', 'static/img/CoredyR750.jpg');
-
+#
 
 SELECT * FROM products;
 
-CREATE USER IF NOT EXISTS 'neremzky' IDENTIFIED BY 'password';
+CREATE USER IF NOT EXISTS 'neremzky' IDENTIFIED BY 'fdsKG39F!ldk0dsLdM3@';
 #GRANT SELECT ON products TO 'neremzky';
 #GRANT SELECT ON cartitems TO 'neremzky';
 GRANT ALL PRIVILEGES ON *.* TO 'neremzky';

@@ -9,7 +9,7 @@ from werkzeug.utils import secure_filename
 import mysql.connector
 
 mysql_user = 'neremzky'
-mysql_pwd = 'password'
+mysql_pwd = 'fdsKG39F!ldk0dsLdM3@'
 mysql_host = 'datanettverk-portfolio2_database_1'
 mysql_db = 'everything'
 
