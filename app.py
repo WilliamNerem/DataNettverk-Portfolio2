@@ -13,7 +13,7 @@ mysql_pwd = 'password'
 mysql_host = 'datanettverk-portfolio2_database_1'
 mysql_db = 'everything'
 
-mydb = mysql.connector.connect(user = mysql_user, password = mysql_pwd, host = mysql_host, database = mysql_db)
+mydb = mysql.connector.connect(user = mysql_user, password = mysql_pwd, host = mysql_host, database = mysql_db, autocommit=True)
 
 mycursor = mydb.cursor()
 mycursor.execute("SELECT * FROM products")
@@ -37,7 +37,6 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 global admin
-
 
 @dataclass
 class ProductModel(db.Model):
@@ -196,6 +195,10 @@ def profile():
 @app.route("/fetchProducts", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def fetchProducts():
+    mycursor = mydb.cursor()
+    mycursor.execute("SELECT * FROM products")
+    row_headers=[x[0] for x in mycursor.description]
+    myresult = mycursor.fetchall()
     json_data=[]
     for result in myresult:
         json_data.append(dict(zip(row_headers,result)))
