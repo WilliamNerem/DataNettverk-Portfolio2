@@ -44,12 +44,12 @@ CREATE TABLE IF NOT EXISTS orderHistory(
 DELIMITER //
 CREATE PROCEDURE addToOrderHistory(_user_id INT)
 BEGIN
-    INSERT INTO orderHistory (_user_id, productName, price)
-    SELECT productName, price FROM cartItems;
+    INSERT INTO orderHistory (user_id, productName, price)
+    SELECT _user_id, productName, price FROM cartItems;
     DELETE FROM cartItems;
 END //
 DELIMITER ;
-
+#
 
 CREATE TABLE IF NOT EXISTS productImages(
     image_id            INT NOT NULL AUTO_INCREMENT,

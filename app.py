@@ -148,7 +148,7 @@ addAdmin()
 
 currentProduct = {}
 currentUser = {}
-currentUserId = {}
+currentUserId = 0
 json_data = []
 currentProductId = 0
 
@@ -167,7 +167,7 @@ def login():
         password = reqdata['password']
         if username == 'Admin' and password == 'Admin':
             currentUser = UserModel.query.filter_by(username = username).first()
-            currentUserId = 1
+            currentUserId = 0
             db.session.commit()
             admin = True
             mysql_user = 'Admin'
@@ -404,6 +404,28 @@ def completePayment(paymentSuccessful):
         # ShoppingcartModel.query.delete()
         # db.session.commit()
     return paymentSuccessful
+
+@app.route("/orderHistory/<int:user_id>", methods=['GET', 'POST'])
+def orderHistory(user_id):
+    # global currentUser
+    # return render_template('orderHistory.html', currentUser = currentUser)
+
+    Json_data = []
+    mycursor = mydb.cursor(buffered=True)
+    mycursor.execute("SELECT * FROM orderHistory WHERE user_id="+str(user_id))
+
+    row_headers=[x[0] for x in mycursor.description]
+    cartitems = mycursor.fetchall()
+
+    for result in cartitems:
+        Json_data.append(dict(zip(row_headers,result)))
+    return jsonify(Json_data)
+
+@app.route("/orderHistory", methods=['GET', 'POST'])
+def renderOrderHistory():
+    global currentUser
+    global currentUserId
+    return render_template('orderHistory.html', currentUser = currentUser, currentUserId = currentUserId)
 
 @app.route("/addproducts", methods=['GET', 'POST'])
 def addproductsyup():

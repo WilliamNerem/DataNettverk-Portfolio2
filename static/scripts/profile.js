@@ -1,4 +1,5 @@
 document.getElementById('logout').addEventListener('click', logout);
+document.getElementById('orderHistory').addEventListener('click', orderHistory)
 
 function logout() {
 
@@ -7,4 +8,8 @@ function logout() {
         .then((data) => {
             window.location.replace(`http://127.0.0.1:5000/`)
         })
+}
+
+function orderHistory() {
+    window.location.replace(`http://127.0.0.1:5000/orderHistory/0`)
 }
