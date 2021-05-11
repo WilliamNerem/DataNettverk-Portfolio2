@@ -51,7 +51,9 @@
             <label for="pinfol">Product info long:</label><br>
             <input type="text" id="pinfol" name="pinfol"><br>
             <label for="productimg">Product image:</label><br>
-            <input type="file" name="file" value="" />
+            <dl>
+            <input type="file" name="files[]" multiple="true" autocomplete="off"></input>
+            </dl>
             <input type="submit" value="Submit" />
         </form>
         <label for="result" id="result"></label>

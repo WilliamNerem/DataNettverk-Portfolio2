@@ -150,6 +150,7 @@ currentProduct = {}
 currentUser = {}
 currentUserId = {}
 json_data = []
+currentProductId = 0
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -210,6 +211,7 @@ def fetchProducts():
     mydb.commit()
     row_headers=[x[0] for x in mycursor.description]
     myresult = mycursor.fetchall()
+    mycursor.close()
     json_data=[]
     for result in myresult:
         json_data.append(dict(zip(row_headers,result)))
@@ -221,11 +223,27 @@ def fetchProducts():
 def fetchCurrent():
     return jsonify(currentProduct)
 
+@app.route("/fetchCurrentImage", methods=['GET', 'POST'])
+@cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
+def fetchCurrentImage():
+    global currentProductId
+    json_data=[]
+    mycursor = mydb.cursor(buffered=True)
+    mycursor.execute("""SELECT productImage FROM productImages WHERE product_id="""+str(currentProductId))
+    row_headers=[x[0] for x in mycursor.description]
+    myresult = mycursor.fetchall()
+    mycursor.close()
+    for result in myresult:
+        json_data.append(dict(zip(row_headers,result)))
+    return jsonify(json_data)  
+
+
 @app.route("/product/<int:product_id>", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def productDescription(product_id):
     global currentProduct
     global json_data
+    global currentProductId
     try:
         json_data=[]
         mycursor.execute("SELECT * FROM products")
@@ -234,6 +252,7 @@ def productDescription(product_id):
             json_data.append(dict(zip(row_headers,result)))
         #productReturn = ProductModel.query.all()
         currentProduct = json_data[product_id-1]
+        currentProductId = product_id
         product_exists = "true"
         return render_template('product.html', product_exists = product_exists, currentUser = currentUser)
     except:
@@ -380,8 +399,14 @@ def addProductsReal():
         price = request.form['price']
         pinfos = request.form['pinfos']
         pinfol = request.form['pinfol']
-        f = request.files['file']
-        filename = secure_filename(f.filename)
+        files = request.files.getlist('files[]')
+        filenames = []
+        fullpaths = []
+        #for i in range(len(files)):
+        filename = secure_filename(files[0].filename)
+        filenames.append(filename)
+        print(filename)
+        #file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         filepath = 'static/img/'+filename
         file_fullPath = os.path.join(app.config['UPLOAD_FOLDER'],filename)
         if (file_fullPath == 'home/static/img/' ):
@@ -389,16 +414,24 @@ def addProductsReal():
             val = (pname, price, pinfos, pinfol, 'static/img/defaultVacuum.jpg')
             mycursor.execute(sql, val)
             mydb.commit()
-            #product = ProductModel(productName=pname, price=price, productInfoShort=pinfos, productInfoLong=pinfol, productImage="static/img\defaultVacuum.jpg")
         else:
-            f.save(file_fullPath)
+            files[0].save(file_fullPath)
             sql = """INSERT INTO products (productName, price, productInfoShort, productInfoLong, productImage) VALUES (%s, %s, %s, %s, %s)"""
             val = (pname, price, pinfos, pinfol, filepath)
             mycursor.execute(sql, val)
             mydb.commit()
-            #product = ProductModel(productName=pname, price=price, productInfoShort=pinfos, productInfoLong=pinfol, productImage=file_fullPath)
-        #db.session.add(product)
-        #db.session.commit()
+            sql = """SELECT product_id FROM products ORDER BY product_id DESC LIMIT 1;"""
+            mycursor.execute(sql)
+            prodid = mycursor.fetchone()
+            #for row in prodid:
+            #    lol = row[0]
+            for i in range(len(files)):
+                filename = secure_filename(files[i].filename)
+                filepath = 'static/img/'+filename
+                fullpaths.append(filepath)
+                sql = """INSERT INTO productImages (product_id, productImage) VALUES (%s, %s)"""
+                val = (prodid[0], filepath)
+                mycursor.execute(sql, val)
         return render_template('addproducts.html', currentUser = currentUser)
     else:
         return render_template('addproducts.html', currentUser = currentUser)

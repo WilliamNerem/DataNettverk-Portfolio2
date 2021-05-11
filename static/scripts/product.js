@@ -18,13 +18,49 @@ if (product_exists == 'false') {
     .then((data) => {
         output = `
             <h1 class="display-4"> ${data.productName}</h1>
-            <p class="lead">${data.productInfoLong}</p>
-            <img src="../${data.productImage}" class="img-thumbnail" />
-            <div class="display-flex">
-                <p class="lead">${data.price},-</p>
-                <button class="addToCart btn btn-outline-dark" value="${data.product_id}">Add to cart</button>
+            <p class="lead">${data.productInfoLong}</p> `
+            // <img src="../${data.productImage}" class="img-thumbnail" />
+            // fetch("http://127.0.0.1:5000/fetchCurrentImage")
+            // .then((res) => res.json())
+            // .then((data) => {
+            //     data.forEach(function(image) {
+            //     output += `<img src="../${image.productImage}" class="img-thumbnail" />`
+            //     })
+            // })
+        // output += `<div class="display-flex">
+        //     <p class="lead">${data.price},-</p>
+        //     <button class="addToCart btn btn-outline-dark" value="${data.product_id}">Add to cart</button>
+        // </div>
+        // `
+        // document.getElementById('renderContent').innerHTML = output;
+
+        // document.querySelectorAll('.addToCart').forEach(item => {
+        //     item.addEventListener('click', addToCart)
+        // })
+        // function addToCart() {
+        //     event.preventDefault();
+        //     let prodId = this.value
+        //     fetch("http://127.0.0.1:5000/shoppingcart/" + prodId)
+        //     .then(() => {     
+        //         checkItemsInCart();
+        //     })
+        // }
+        return fetch("http://127.0.0.1:5000/fetchCurrentImage")
+    })
+    .then((res) => res.json())
+    .then((data) => {
+        data.forEach(function(image) {
+        output += `<img src="../${image.productImage}" class="img-thumbnail" />`
+        })
+        return fetch("http://127.0.0.1:5000/fetchCurrent")
+    })
+    .then((res) => res.json())
+    .then((data) => {
+        output += `<div class="display-flex">
+            <p class="lead">${data.price},-</p>
+            <button class="addToCart btn btn-outline-dark" value="${data.product_id}">Add to cart</button>
             </div>
-        `
+            `
         document.getElementById('renderContent').innerHTML = output;
 
         document.querySelectorAll('.addToCart').forEach(item => {
@@ -38,8 +74,15 @@ if (product_exists == 'false') {
                 checkItemsInCart();
             })
         }
-    
     })
+    // fetch("http://127.0.0.1:5000/fetchCurrentImage")
+    //         .then((res) => res.json())
+    //         .then((data) => {
+    //             data.forEach(function(image) {
+    //             output += `<img src="../${image.productImage}" class="img-thumbnail" />`
+    //             })
+    //             document.getElementById('renderContent').innerHTML = output;
+    //         })
     
     
 }

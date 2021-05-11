@@ -51,6 +51,14 @@ END //
 DELIMITER ;
 
 
+CREATE TABLE IF NOT EXISTS productImages(
+    image_id            INT NOT NULL AUTO_INCREMENT,
+    product_id          INT NOT NULL,
+    productImage        VARCHAR(300) NOT NULL,
+    PRIMARY KEY         (image_id)
+);
+
+
 INSERT INTO products (productName, price, productInfoShort, productInfoLong, productImage) 
 VALUES 
 ('Shark NV352', 1799, 'Lift Away Upright Vacuum with Wide Upholstery and Crevice Tools, Lavender', 'Lift-Away: Lift Away the detachable pod and easily clean, above-floor areas like stairs and furniture. Anti-Allergen Complete Seal Technology and a HEPA filter trap dust and allergens inside the vacuum. Powerful, lightweight, and versatile at only 14 lbs. Brushroll shutoff allows you to instantly switch from deep carpet cleaning to gentle bare floor cleaning. Swivel Steering for excellent control to maneuver around furniture. Upholstery Tool, and two lengths of Crevice Tool included for versatile cleaning.', 'static/img/SharkNV352.jpg'),
@@ -64,6 +72,29 @@ VALUES
 ('GOOVI 1600PA', 1729, 'Robotic Vacuum Cleaner with Self-Charging', '360° Smart Sensor Protectio, Multiple Cleaning Modes Vacuum Best for Pet Hairs, Hard Floor & Medium Carpet', 'static/img/GOOVI1600PA.jpg'),
 ('Coredy R750', 2999, 'Robot Vacuum Cleaner, Compatible with Alexa', 'Mopping System, Boost Intellect, Virtual Boundary Supported, 2000Pa Suction, Super-Thin, Upgraded Robotic Vacuums, Cleans Hard Floor to Carpet', 'static/img/CoredyR750.jpg');
 
+
+INSERT INTO productImages (product_id, productImage)
+VALUES
+(1, 'static/img/SharkNV352.jpg'),
+(1, 'static/img/SharkNV352_2.jpg'),
+(2, 'static/img/BissellFeatherweight.jpg'),
+(2, 'static/img/BissellFeatherweight_2.jpg'),
+(3, 'static/img/BISSELLCleanviewSwivelPet.jpg'),
+(3, 'static/img/BISSELLCleanviewSwivelPet_2.png'),
+(4, 'static/img/NEQUARECordlessVacuum.jpg'),
+(4, 'static/img/NEQUARECordlessVacuum_2.jpg'),
+(5, 'static/img/TOPPINStickVacuumCleanerCordless.jpg'),
+(5, 'static/img/TOPPINStickVacuumCleanerCordless_2.jpg'),
+(6, 'static/img/Happy-houseHandheldVacuum.jpg'),
+(6, 'static/img/Happy-houseHandheldVacuum_2.jpg'),
+(7, 'static/img/DysonV7Trigger.jpg'),
+(7, 'static/img/DysonV7Trigger_2.jpg'),
+(8, 'static/img/SharkIONRobotVacuumAV752.jpg'),
+(8, 'static/img/SharkIONRobotVacuumAV752_2.jpg'),
+(9, 'static/img/GOOVI1600PA.jpg'),
+(9, 'static/img/GOOVI1600PA_2.jpg'),
+(10, 'static/img/CoredyR750.jpg'),
+(10, 'static/img/CoredyR750_2.jpg');
 
 SELECT * FROM products;
 
