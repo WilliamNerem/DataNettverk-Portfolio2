@@ -9,7 +9,7 @@ from werkzeug.utils import secure_filename
 import mysql.connector
 
 mysql_user = 'neremzky'
-mysql_pwd = 'fdsKG39F!ldk0dsLdM3@'
+mysql_pwd = 'passordNeremzky'
 mysql_host = 'datanettverk-portfolio2_database_1'
 mysql_db = 'everything'
 
@@ -148,6 +148,7 @@ addAdmin()
 
 currentProduct = {}
 currentUser = {}
+currentUserId = {}
 json_data = []
 
 
@@ -165,11 +166,23 @@ def login():
         password = reqdata['password']
         if username == 'Admin' and password == 'Admin':
             currentUser = UserModel.query.filter_by(username = username).first()
+            currentUserId = 1
             db.session.commit()
             admin = True
+            mysql_user = 'Admin'
+            mysql_pwd = 'fdsKG39F!ldk0dsLdM3@'
+            mysql_host = 'datanettverk-portfolio2_database_1'
+            mysql_db = 'everything'
+            mydb = mysql.connector.connect(user = mysql_user, password = mysql_pwd, host = mysql_host, database = mysql_db, autocommit=True)
             return jsonify(currentUser)
         else: 
-            return render_template('login.html', currentUser = currentUser)   
+            mysql_user = username
+            mysql_pwd = password
+            mysql_host = 'datanettverk-portfolio2_database_1'
+            mysql_db = 'everything'
+            mydb = mysql.connector.connect(user = mysql_user, password = mysql_pwd, host = mysql_host, database = mysql_db, autocommit=True)
+            #return jsonify(currentUser)
+            return render_template('login.html', currentUser = currentUser)
     else:
         return render_template('login.html', currentUser = currentUser)
 
@@ -331,11 +344,11 @@ def removeCheckoutItems(shoppingcart_id):
 @app.route("/payment/complete/<string:paymentSuccessful>", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def completePayment(paymentSuccessful):
+    global currentUserId
     if paymentSuccessful == 'true':
-
-        sql = """DELETE FROM cartItems"""
+        args = [currentUserId]
         mycursor = mydb.cursor(buffered=True)
-        mycursor.execute(sql)
+        mycursor.callproc('addToOrderHistory', args)
         mycursor.close()
         mydb.commit()
         # ShoppingcartModel.query.delete()

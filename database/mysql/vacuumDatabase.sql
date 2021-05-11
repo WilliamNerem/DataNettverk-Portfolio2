@@ -22,6 +22,35 @@ CREATE TABLE IF NOT EXISTS cartItems(
     PRIMARY KEY         (shoppingcart_id)
 );
 
+CREATE TABLE IF NOT EXISTS users(
+    user_id             INT NOT NULL AUTO_INCREMENT,
+    username            VARCHAR(30) NOT NULL,
+    firstname           VARCHAR(30) NOT NULL,
+    lastname            VARCHAR(30) NOT NULL,
+    email               VARCHAR(100) NOT NULL,
+    phone               VARCHAR(10) NOT NULL,
+    password            VARCHAR(30) NOT NULL,
+    PRIMARY KEY         (user_id)
+);
+
+CREATE TABLE IF NOT EXISTS orderHistory(
+    orderNumber         INT NOT NULL AUTO_INCREMENT,
+    user_id             INT NOT NULL,
+    productName         VARCHAR(100) NOT NULL,
+    price               INT NOT NULL,
+    PRIMARY KEY         (orderNumber)
+);
+
+DELIMITER //
+CREATE PROCEDURE addToOrderHistory(_user_id INT)
+BEGIN
+    INSERT INTO orderHistory (_user_id, productName, price)
+    SELECT productName, price FROM cartItems;
+    DELETE FROM cartItems;
+END //
+DELIMITER ;
+
+
 INSERT INTO products (productName, price, productInfoShort, productInfoLong, productImage) 
 VALUES 
 ('Shark NV352', 1799, 'Lift Away Upright Vacuum with Wide Upholstery and Crevice Tools, Lavender', 'Lift-Away: Lift Away the detachable pod and easily clean, above-floor areas like stairs and furniture. Anti-Allergen Complete Seal Technology and a HEPA filter trap dust and allergens inside the vacuum. Powerful, lightweight, and versatile at only 14 lbs. Brushroll shutoff allows you to instantly switch from deep carpet cleaning to gentle bare floor cleaning. Swivel Steering for excellent control to maneuver around furniture. Upholstery Tool, and two lengths of Crevice Tool included for versatile cleaning.', 'static/img/SharkNV352.jpg'),
@@ -34,12 +63,20 @@ VALUES
 ('Shark ION Robot Vacuum AV752', 2099, 'Robot vacuum with three brush types', 'Wi-Fi Connected, 120min Runtime, Works with Alexa, Multi-Surface Cleaning, White', 'static/img/SharkIONRobotVacuumAV752.jpg'),
 ('GOOVI 1600PA', 1729, 'Robotic Vacuum Cleaner with Self-Charging', '360° Smart Sensor Protectio, Multiple Cleaning Modes Vacuum Best for Pet Hairs, Hard Floor & Medium Carpet', 'static/img/GOOVI1600PA.jpg'),
 ('Coredy R750', 2999, 'Robot Vacuum Cleaner, Compatible with Alexa', 'Mopping System, Boost Intellect, Virtual Boundary Supported, 2000Pa Suction, Super-Thin, Upgraded Robotic Vacuums, Cleans Hard Floor to Carpet', 'static/img/CoredyR750.jpg');
-#
+
 
 SELECT * FROM products;
 
-CREATE USER IF NOT EXISTS 'neremzky' IDENTIFIED BY 'fdsKG39F!ldk0dsLdM3@';
+CREATE USER IF NOT EXISTS 'neremzky' IDENTIFIED BY 'passordNeremzky';
 #GRANT SELECT ON products TO 'neremzky';
 #GRANT SELECT ON cartitems TO 'neremzky';
 GRANT ALL PRIVILEGES ON *.* TO 'neremzky';
 
+
+
+CREATE USER IF NOT EXISTS 'Admin' IDENTIFIED BY 'fdsKG39F!ldk0dsLdM3@';
+GRANT ALL PRIVILEGES ON *.* TO 'Admin';
+
+INSERT INTO users (username, firstname, lastname, email, phone, password)
+VALUES
+('Admin', 'Admin', 'Admin', 'Admin@Admin.com', '12345678', 'fdsKG39F!ldk0dsLdM3@')
