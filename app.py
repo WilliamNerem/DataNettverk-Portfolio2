@@ -195,8 +195,39 @@ def logout():
     return render_template('index.html', currentUser = currentUser)
 
 @app.route("/register", methods=['GET', 'POST'])
+@cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def register():
-    return render_template('register.html', currentUser = currentUser)
+    if request.method == 'POST':
+        reqdata = request.get_json()
+        username = reqdata['username']
+        firstname = reqdata['firstname']
+        lastname = reqdata['lastname']
+        email = reqdata['email']
+        phone = reqdata['phone']
+        password = reqdata['password']
+        sql = """INSERT INTO users (username, firstname, lastname, email, phone, password) VALUES (%s, %s, %s, %s, %s, %s)"""
+        val = (username, firstname, lastname, email, phone, password)
+        mycursor.execute(sql, val)
+        mydb.commit()
+        return render_template('register.html', currentUser = currentUser)
+
+    else:
+        return render_template('register.html', currentUser = currentUser)
+
+@app.route("/fetchUsers", methods=['GET', 'POST'])
+@cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
+def fetchUsers():
+    global json_data
+    mycursor = mydb.cursor(buffered=True)
+    mycursor.execute("SELECT * FROM users")
+    mydb.commit()
+    row_headers=[x[0] for x in mycursor.description]
+    myresult = mycursor.fetchall()
+    mycursor.close()
+    json_data=[]
+    for result in myresult:
+        json_data.append(dict(zip(row_headers,result)))
+    return jsonify(json_data)
 
 @app.route("/profile", methods=['GET', 'POST'])
 def profile():
@@ -295,11 +326,11 @@ def addToShoppingcart(product_id):
     # addCartItem = ShoppingcartModel(shoppingcart_id = cartItemId.shoppingcart_id, product_id = cartItem.product_id, productName=cartItem.productName, price=cartItem.price, productInfoShort = cartItem.productInfoShort, productInfoLong = cartItem.productInfoLong, productImage = cartItem.productImage)
     # db.session.add(addCartItem)
     # db.session.commit()
-    return render_template('shoppingcart.html', countCart = len(json_data))
+    return render_template('shoppingcart.html', countCart = len(json_data), currentUser = currentUser)
 
 @app.route("/shoppingcart/checkout", methods=['GET', 'POST'])
 def checkout():
-    return render_template('shoppingcart.html')
+    return render_template('shoppingcart.html', currentUser = currentUser)
 
 @app.route("/shoppingcart/countItems", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
@@ -380,7 +411,7 @@ def addproductsyup():
 
 @app.route('/form')
 def form():
-    return render_template('form.html')
+    return render_template('form.html', currentUser = currentUser)
  
 @app.route('/upload', methods = ['POST', 'GET'])
 def upload():

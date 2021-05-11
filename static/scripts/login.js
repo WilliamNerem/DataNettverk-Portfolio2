@@ -1,5 +1,4 @@
 document.getElementById('formLogin').addEventListener('submit', login);
-document.getElementById('regBtn').addEventListener('click', register);
 const result = document.getElementById('result')
 
 function login() {
@@ -29,12 +28,5 @@ function login() {
 
         })
         .catch((error) => console.log(error))
-
-}
-
-function register() {
-    event.preventDefault();
-
-    result.innerHTML = 'Sign in inn er klikket'
 
 }

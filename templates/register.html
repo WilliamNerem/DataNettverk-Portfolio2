@@ -30,15 +30,27 @@
         </div>
     </nav>
 
-    <h1>Login</h1>
-    <label for="username">Username: </label><br>
-    <input type="text" id="username" name="username"><br>
-    <label for="username">Password: </label><br>
-    <input type="text" id="password" name="password"><br>
-    <input type="submit" value = "Login" />
-    <input type="submit" value = "Register"/>
-    <label for="result" id="result"></label>
+    <div class="container">
+        <h2 class="display-2">Register</h2>
+        <form id="formReg">
+            <label for="username">Username: </label><br>
+            <input type="text" id="username" name="username"><br>
+            <label for="firstname">Firstname: </label><br>
+            <input type="text" id="firstname" name="firstname"><br>
+            <label for="lastname">Lastname: </label><br>
+            <input type="text" id="lastname" name="lastname"><br>
+            <label for="email">Email: </label><br>
+            <input type="email" id="email" name="email"><br>
+            <label for="phone">Phone: </label><br>
+            <input type="tel" id="phone" name="phone"><br>
+            <label for="password">Password: </label><br>
+            <input type="password" id="password" name="password"><br>
+            <button type="submit" id="regbtn">Register</button>
+        </form>
+        <p id="result"></p>
+    </div>
 
+    <script src="{{ url_for('static', filename='scripts/register.js') }}"></script>
     <script src="{{ url_for('static', filename='scripts/common.js') }}"></script>
 </body>
 </html>
