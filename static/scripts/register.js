@@ -1,5 +1,6 @@
 document.getElementById('formReg').addEventListener('submit', regUser);
 let userExists = false;
+const result = document.getElementById('result');
 
 function regUser() {
     event.preventDefault();
@@ -25,8 +26,6 @@ function regUser() {
         .then((data) => {
             userExists = false;
             data.forEach(function (user) {
-                console.log(user.username)
-
                 if (user.username == newUser.username) {
                     userExists = true;
                 }
@@ -47,13 +46,15 @@ function regUser() {
                     .then((res) => res.text())
                     .then((data) => {
 
-                        console.log('New user added!')
+                        result.style = 'color: green;'
+                        result.innerHTML = 'User added!'
 
                     })
                     .catch((error) => console.log(error))
             }
             else {
-                console.log('ERROR!: User exists!')
+                result.style = 'color: red;'
+                result.innerHTML = 'Sorry, that username already exists!'
             }
         })
 }
