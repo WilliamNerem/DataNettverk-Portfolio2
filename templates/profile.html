@@ -44,6 +44,9 @@
             </svg>
             {{currentUser.username}}
         </h2>
+        <p><b>Name:</b> {{currentUser.firstname}} {{currentUser.lastname}}</p>
+        <p><b>Email:</b> {{currentUser.email}}</p>
+        <p><b>Phone:</b> {{currentUser.phone}}</p>
         <a href="http://127.0.0.1:5000/"><button type="button" id="logout">Log out</button></a>
         <button type="button" id="orderHistory" href="http://127.0.0.1:5000/">Order history</button>
     </div>
