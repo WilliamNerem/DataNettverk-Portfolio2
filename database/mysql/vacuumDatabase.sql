@@ -105,7 +105,7 @@ VALUES
 (9, 'static/img/GOOVI1600PA_2.jpg'),
 (10, 'static/img/CoredyR750.jpg'),
 (10, 'static/img/CoredyR750_2.jpg');
-#
+
 CREATE USER IF NOT EXISTS 'default' IDENTIFIED BY 'fdsKG39F!ldk0dsLdM3@';
 GRANT SELECT ON products TO 'default';
 GRANT SELECT ON cartItems TO 'default';

@@ -347,6 +347,14 @@ def addProductsReal():
                 mycursor = mydb.cursor(buffered=True)
                 mycursor.execute(sql, val)
                 mydb.commit()
+                sql = """SELECT product_id FROM products ORDER BY product_id DESC LIMIT 1;"""
+                mycursor = mydb.cursor(buffered=True)
+                mycursor.execute(sql)
+                prodid = mycursor.fetchone()
+                sql = """INSERT INTO productImages (product_id, productImage) VALUES (%s, %s)"""
+                val = (prodid[0], 'static/img/defaultVacuum.jpg')
+                mycursor = mydb.cursor(buffered=True)
+                mycursor.execute(sql, val)
                 return render_template('addproducts.html', currentUser = currentUser, success = 'Product added!')
             else:
                 files[0].save(file_fullPath)
