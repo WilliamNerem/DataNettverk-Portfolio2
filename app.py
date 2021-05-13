@@ -150,7 +150,7 @@ currentProduct = {}
 currentUser = {}
 currentUserId = 0
 json_data = []
-currentProductId = 0
+currentProductId = None
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -179,11 +179,12 @@ def login():
         else: 
             mysql_user = username
             mysql_pwd = password
+            #legg til currentUserId her
             mysql_host = 'datanettverk-portfolio2_database_1'
             mysql_db = 'everything'
             mydb = mysql.connector.connect(user = mysql_user, password = mysql_pwd, host = mysql_host, database = mysql_db, autocommit=True)
             #return jsonify(currentUser)
-            return render_template('login.html', currentUser = currentUser)
+            return render_template('login.html', currentUser = currentUser) #send currentUserId her
     else:
         return render_template('login.html', currentUser = currentUser)
 
@@ -192,6 +193,7 @@ def login():
 def logout():
     global currentUser
     currentUser = {}
+    currentUserId = None
     return render_template('index.html', currentUser = currentUser)
 
 @app.route("/register", methods=['GET', 'POST'])

@@ -35,7 +35,9 @@ CREATE TABLE IF NOT EXISTS users(
 
 CREATE TABLE IF NOT EXISTS orderHistory(
     orderNumber         INT NOT NULL AUTO_INCREMENT,
+    dateAndTime         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     user_id             INT NOT NULL,
+    product_id          INT NOT NULL,
     productName         VARCHAR(100) NOT NULL,
     price               INT NOT NULL,
     PRIMARY KEY         (orderNumber)
@@ -44,8 +46,8 @@ CREATE TABLE IF NOT EXISTS orderHistory(
 DELIMITER //
 CREATE PROCEDURE addToOrderHistory(_user_id INT)
 BEGIN
-    INSERT INTO orderHistory (user_id, productName, price)
-    SELECT _user_id, productName, price FROM cartItems;
+    INSERT INTO orderHistory (user_id, product_id, productName, price)
+    SELECT _user_id, product_id, productName, price FROM cartItems;
     DELETE FROM cartItems;
 END //
 DELIMITER ;
