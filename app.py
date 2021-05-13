@@ -161,29 +161,54 @@ def renderIndex():
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def login():
     global currentUser
+    global json_data
+    correctLogin = False
+    mycursor = mydb.cursor(buffered=True)
+    mycursor.execute("SELECT * FROM users")
+    mydb.commit()
+    row_headers=[x[0] for x in mycursor.description]
+    myresult = mycursor.fetchall()
+    mycursor.close()
+    json_data=[]
+    for result in myresult:
+        json_data.append(dict(zip(row_headers,result)))
+
     if request.method == 'POST':
         reqdata = request.get_json()
         username = reqdata['username']
         password = reqdata['password']
-        if username == 'Admin' and password == 'Admin':
-            currentUser = UserModel.query.filter_by(username = username).first()
-            currentUserId = 0
-            db.session.commit()
-            admin = True
-            mysql_user = 'Admin'
-            mysql_pwd = 'fdsKG39F!ldk0dsLdM3@'
-            mysql_host = 'datanettverk-portfolio2_database_1'
-            mysql_db = 'everything'
-            mydb = mysql.connector.connect(user = mysql_user, password = mysql_pwd, host = mysql_host, database = mysql_db, autocommit=True)
-            return jsonify(currentUser)
-        else: 
-            mysql_user = username
-            mysql_pwd = password
-            mysql_host = 'datanettverk-portfolio2_database_1'
-            mysql_db = 'everything'
-            mydb = mysql.connector.connect(user = mysql_user, password = mysql_pwd, host = mysql_host, database = mysql_db, autocommit=True)
-            #return jsonify(currentUser)
-            return render_template('login.html', currentUser = currentUser)
+
+        for user in json_data:
+            if user['username'] == username:
+                if user['password'] == password:
+                    correctLogin = True
+                    currentUser = user
+                    break
+                else: 
+                    correctLogin = False
+            else:
+                correctLogin = False
+
+        if(correctLogin):
+            if username == 'Admin' and password == 'Admin':
+                currentUserId = 0
+                db.session.commit()
+                admin = True
+                mysql_user = username
+                mysql_pwd = password
+                mysql_host = 'datanettverk-portfolio2_database_1'
+                mysql_db = 'everything'
+                # mydb = mysql.connector.connect(user = mysql_user, password = mysql_pwd, host = mysql_host, database = mysql_db, autocommit=True)
+                return jsonify(currentUser)
+            else: 
+                mysql_user = username
+                mysql_pwd = password
+                mysql_host = 'datanettverk-portfolio2_database_1'
+                mysql_db = 'everything'
+                # mydb = mysql.connector.connect(user = mysql_user, password = mysql_pwd, host = mysql_host, database = mysql_db, autocommit=True)
+                return jsonify(currentUser)
+        return render_template('login.html', currentUser = currentUser)
+
     else:
         return render_template('login.html', currentUser = currentUser)
 
