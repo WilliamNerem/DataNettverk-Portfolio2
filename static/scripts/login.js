@@ -1,5 +1,5 @@
 document.getElementById('formLogin').addEventListener('submit', login);
-const result = document.getElementById('result')
+const result = document.getElementById('result');
 
 function login() {
     event.preventDefault();
@@ -27,6 +27,9 @@ function login() {
             window.location.replace(`http://127.0.0.1:5000/profile`)
 
         })
-        .catch((error) => console.log(error))
+        .catch((error) => {
+            result.style = 'color: red;';
+            result.innerHTML = 'Wrong username or password!';
+        })
 
 }
