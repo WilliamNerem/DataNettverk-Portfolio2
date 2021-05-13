@@ -1,5 +1,10 @@
 let currentUserId = document.getElementById('currentUserId').innerHTML;
 
+user = document.getElementById('currentUser').innerHTML
+if (user == 'Admin'){
+    document.getElementById('addProducts').style.display = "inline"
+}
+
 fetch(`http://localhost:5000/orderHistory/${currentUserId}`)
 .then((res) => res.json())
 .then((data) => {

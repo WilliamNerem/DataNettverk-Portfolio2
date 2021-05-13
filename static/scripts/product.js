@@ -3,6 +3,11 @@ let product_exists = document.getElementById('product_exists').innerHTML;
 let itemsInCart = 0;
 checkItemsInCart();
 
+user = document.getElementById('currentUser').innerHTML
+if (user == 'Admin'){
+    document.getElementById('addProducts').style.display = "inline"
+}
+
 if (product_exists == 'false') {
     output = `
     <div class="alert alert-info" role="alert">

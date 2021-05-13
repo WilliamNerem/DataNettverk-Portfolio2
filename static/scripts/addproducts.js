@@ -27,7 +27,7 @@ function formSubmitted() {
     })
     .then((res) => res.text())
     .then((data) => console.log(data))
-    document.getElementById('result').innerHTML = "<h3>Product added!</h3>"
     document.getElementById('myform').reset();
+    document.getElementById('successProduct').innerHTML = 'Product added!'
 
 }

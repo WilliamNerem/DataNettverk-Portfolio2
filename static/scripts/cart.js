@@ -11,6 +11,10 @@ let paymentSuccessful = 'false';
 const sleep = (milliseconds) => {
     return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
+user = document.getElementById('currentUser').innerHTML
+if (user == 'Admin'){
+    document.getElementById('addProducts').style.display = "inline"
+}
 
 
 discountForm.onsubmit = () => {

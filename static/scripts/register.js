@@ -2,6 +2,11 @@ document.getElementById('formReg').addEventListener('submit', regUser);
 let userExists = false;
 const result = document.getElementById('result');
 
+user = document.getElementById('currentUser').innerHTML
+if (user == 'Admin'){
+    document.getElementById('addProducts').style.display = "inline"
+}
+
 function regUser() {
     event.preventDefault();
 
@@ -51,7 +56,7 @@ function regUser() {
 
                     })
                     .then(() => {
-                        fetch(`http://127.0.0.1:5000/login`, {
+                        fetch(`http://localhost:5000/login`, {
                             method: 'POST',
                             headers: {
                                 'Accept': 'application/json, text/plain, */*',
@@ -60,7 +65,7 @@ function regUser() {
                             body: JSON.stringify(newUser)
                         })
                             .then(() => {
-                                window.location.replace(`http://127.0.0.1:5000/profile`)
+                                window.location.replace(`http://localhost:5000/profile`)
 
                             })
                     })

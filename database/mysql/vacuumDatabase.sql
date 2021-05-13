@@ -105,19 +105,24 @@ VALUES
 (9, 'static/img/GOOVI1600PA_2.jpg'),
 (10, 'static/img/CoredyR750.jpg'),
 (10, 'static/img/CoredyR750_2.jpg');
+#
+CREATE USER IF NOT EXISTS 'default' IDENTIFIED BY 'fdsKG39F!ldk0dsLdM3@';
+GRANT SELECT ON products TO 'default';
+GRANT SELECT ON cartItems TO 'default';
+GRANT SELECT ON productImages TO 'default';
+GRANT SELECT ON orderHistory TO 'default';
+GRANT SELECT ON users TO 'default';
+GRANT INSERT ON orderHistory TO 'default';
+GRANT INSERT ON cartItems TO 'default';
+GRANT INSERT ON productImages TO 'default';
+GRANT INSERT ON users TO 'default';
+GRANT DELETE ON cartItems TO 'default';
 
-SELECT * FROM products;
-
-CREATE USER IF NOT EXISTS 'neremzky' IDENTIFIED BY 'passordNeremzky';
-#GRANT SELECT ON products TO 'neremzky';
-#GRANT SELECT ON cartitems TO 'neremzky';
-GRANT ALL PRIVILEGES ON *.* TO 'neremzky';
 
 
-
-CREATE USER IF NOT EXISTS 'Admin' IDENTIFIED BY 'fdsKG39F!ldk0dsLdM3@';
+CREATE USER IF NOT EXISTS 'Admin' IDENTIFIED BY 'Admin';
 GRANT ALL PRIVILEGES ON *.* TO 'Admin';
 
 INSERT INTO users (username, firstname, lastname, email, phone, password)
 VALUES
-('Admin', 'Admin', 'Admin', 'Admin@Admin.com', '12345678', 'fdsKG39F!ldk0dsLdM3@')
+('Admin', 'Admin', 'Admin', 'Admin@Admin.com', '12345678', 'Admin')

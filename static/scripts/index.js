@@ -6,6 +6,10 @@ var logged_in = null
 const sleep = (milliseconds) => {
     return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
+user = document.getElementById('currentUser').innerHTML
+if (user == 'Admin'){
+    document.getElementById('addProducts').style.display = "inline"
+}
 
 fetch('http://localhost:5000/fetchProducts')
 .then((res) => res.json())

@@ -9,8 +9,8 @@ import mysql.connector
 from google.oauth2 import id_token as goog_token
 from google.auth.transport import requests as goog_req
 
-mysql_user = 'neremzky'
-mysql_pwd = 'passordNeremzky'
+mysql_user = 'default'
+mysql_pwd = 'fdsKG39F!ldk0dsLdM3@'
 mysql_host = 'datanettverk-portfolio2_database_1'
 mysql_db = 'everything'
 oauth_id = '327986808053-k9gr4qboqvo28psnnrqnqjem9qdehkn2.apps.googleusercontent.com'
@@ -52,6 +52,7 @@ def login():
     global currentUser
     global currentUserId
     global json_data
+    global mydb
     correctLogin = False
     mycursor = mydb.cursor(buffered=True)
     mycursor.execute("SELECT * FROM users")
@@ -81,22 +82,12 @@ def login():
                 correctLogin = False
 
         if(correctLogin):
-            if username == 'Admin' and password == 'Admin':
-                db.session.commit()
-                admin = True
-                mysql_user = username
-                mysql_pwd = password
-                mysql_host = 'datanettverk-portfolio2_database_1'
-                mysql_db = 'everything'
-                # mydb = mysql.connector.connect(user = mysql_user, password = mysql_pwd, host = mysql_host, database = mysql_db, autocommit=True)
-                return jsonify(currentUser)
-            else: 
-                mysql_user = username
-                mysql_pwd = password
-                mysql_host = 'datanettverk-portfolio2_database_1'
-                mysql_db = 'everything'
-                # mydb = mysql.connector.connect(user = mysql_user, password = mysql_pwd, host = mysql_host, database = mysql_db, autocommit=True)
-                return jsonify(currentUser)
+            mysql_user = username
+            mysql_pwd = password
+            mysql_host = 'datanettverk-portfolio2_database_1'
+            mysql_db = 'everything'
+            mydb = mysql.connector.connect(user = mysql_user, password = mysql_pwd, host = mysql_host, database = mysql_db, autocommit=True)
+            return jsonify(currentUser)
         return render_template('login.html', currentUser = currentUser)
 
     else:
@@ -108,8 +99,14 @@ def login():
 @cross_origin(origin='localhost',headers=['Content-Type','Authorization'])
 def logout():
     global currentUser
+    global mydb
     currentUser = {}
     currentUserId = None
+    mysql_user = 'default'
+    mysql_pwd = 'fdsKG39F!ldk0dsLdM3@'
+    mysql_host = 'datanettverk-portfolio2_database_1'
+    mysql_db = 'everything'
+    mydb = mysql.connector.connect(user = mysql_user, password = mysql_pwd, host = mysql_host, database = mysql_db, autocommit=True)
     return render_template('index.html', currentUser = currentUser)
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -125,6 +122,7 @@ def register():
         password = reqdata['password']
         sql = """INSERT INTO users (username, firstname, lastname, email, phone, password) VALUES (%s, %s, %s, %s, %s, %s)"""
         val = (username, firstname, lastname, email, phone, password)
+        mycursor = mydb.cursor(buffered=True)
         mycursor.execute(sql, val)
         mydb.commit()
         return render_template('register.html', currentUser = currentUser)
@@ -194,6 +192,7 @@ def productDescription(product_id):
     global currentProductId
     try:
         json_data=[]
+        mycursor = mydb.cursor(buffered=True)
         mycursor.execute("SELECT * FROM products")
         myresult = mycursor.fetchall()
         for result in myresult:
@@ -216,7 +215,7 @@ def addToShoppingcart(product_id):
     global json_data
     for result in myresult:
         json_data.append(dict(zip(row_headers,result)))
-
+    mycursor = mydb.cursor(buffered=True)
     mycursor.execute("SELECT * FROM cartItems where product_id="+str(product_id))
     cartrow_headers=[x[0] for x in mycursor.description]
     cartresult = mycursor.fetchall()
@@ -229,6 +228,7 @@ def addToShoppingcart(product_id):
 
     sql = """INSERT INTO cartItems (product_id, productName, price, productInfoShort, productInfoLong, productImage) VALUES (%s, %s, %s, %s, %s, %s)"""
     val = (itemValues[0], itemValues[1], itemValues[2], itemValues[3], itemValues[4], itemValues[5])
+    mycursor = mydb.cursor(buffered=True)
     mycursor.execute(sql, val)
     mydb.commit()
     return render_template('shoppingcart.html', countCart = len(json_data), currentUser = currentUser)
@@ -340,34 +340,40 @@ def addProductsReal():
         filenames.append(filename)
         filepath = 'static/img/'+filename
         file_fullPath = os.path.join(app.config['UPLOAD_FOLDER'],filename)
-        if (allowed_file(filename)):
+        if (allowed_file(filename) or filename == ''):
             if (file_fullPath == 'home/static/img/' ):
                 sql = """INSERT INTO products (productName, price, productInfoShort, productInfoLong, productImage) VALUES (%s, %s, %s, %s, %s)"""
                 val = (pname, price, pinfos, pinfol, 'static/img/defaultVacuum.jpg')
+                mycursor = mydb.cursor(buffered=True)
                 mycursor.execute(sql, val)
                 mydb.commit()
+                return render_template('addproducts.html', currentUser = currentUser, success = 'Product added!')
             else:
                 files[0].save(file_fullPath)
                 sql = """INSERT INTO products (productName, price, productInfoShort, productInfoLong, productImage) VALUES (%s, %s, %s, %s, %s)"""
                 val = (pname, price, pinfos, pinfol, filepath)
+                mycursor = mydb.cursor(buffered=True)
                 mycursor.execute(sql, val)
                 mydb.commit()
                 sql = """SELECT product_id FROM products ORDER BY product_id DESC LIMIT 1;"""
+                mycursor = mydb.cursor(buffered=True)
                 mycursor.execute(sql)
                 prodid = mycursor.fetchone()
                 for i in range(len(files)):
                     filename = secure_filename(files[i].filename)
                     if (allowed_file(filename)):
                         filepath = 'static/img/'+filename
+                        file_fullPath = os.path.join(app.config['UPLOAD_FOLDER'],filename)
+                        files[i].save(file_fullPath)
                         fullpaths.append(filepath)
                         sql = """INSERT INTO productImages (product_id, productImage) VALUES (%s, %s)"""
                         val = (prodid[0], filepath)
+                        mycursor = mydb.cursor(buffered=True)
                         mycursor.execute(sql, val)
-                        return render_template('addproducts.html', currentUser = currentUser)
-                    else:    
-                        return render_template('addproducts.html', currentUser = currentUser)
+                
+                return render_template('addproducts.html', currentUser = currentUser, success = 'Product added!')
         else:
-          return render_template('addproducts.html', currentUser = currentUser)      
+          return render_template('addproducts.html', currentUser = currentUser, wentWrong = 'Invalid file. File must be .png, .jpeg or .jpg')      
     else:
         return render_template('addproducts.html', currentUser = currentUser)
 
