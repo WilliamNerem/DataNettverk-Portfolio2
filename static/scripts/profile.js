@@ -3,10 +3,10 @@ document.getElementById('orderHistory').addEventListener('click', orderHistory)
 
 function logout() {
 
-    fetch(`http://127.0.0.1:5000/logout`)
+    fetch(`http://localhost:5000/logout`)
         .then((res) => res.json())
         .then((data) => {
-            window.location.replace(`http://127.0.0.1:5000/`)
+            window.location.replace(`http://localhost:5000/`)
         })
 }
 

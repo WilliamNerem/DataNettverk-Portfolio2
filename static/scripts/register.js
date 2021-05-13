@@ -21,7 +21,7 @@ function regUser() {
         password: password,
     }
 
-    fetch(`http://127.0.0.1:5000/fetchUsers`)
+    fetch(`http://localhost:5000/fetchUsers`)
         .then((res) => res.json())
         .then((data) => {
             userExists = false;
@@ -35,7 +35,7 @@ function regUser() {
         .then(() => {
 
             if (!userExists) {
-                fetch(`http://127.0.0.1:5000/register`, {
+                fetch(`http://localhost:5000/register`, {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json, text/plain, */*',

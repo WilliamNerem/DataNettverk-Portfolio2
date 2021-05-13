@@ -13,14 +13,14 @@ if (product_exists == 'false') {
     
 } else {
 
-    fetch("http://127.0.0.1:5000/fetchCurrent")
+    fetch("http://localhost:5000/fetchCurrent")
     .then((res) => res.json())
     .then((data) => {
         output = `
             <h1 class="display-4"> ${data.productName}</h1>
             <p class="lead">${data.productInfoLong}</p> `
             // <img src="../${data.productImage}" class="img-thumbnail" />
-            // fetch("http://127.0.0.1:5000/fetchCurrentImage")
+            // fetch("http://localhost:5000/fetchCurrentImage")
             // .then((res) => res.json())
             // .then((data) => {
             //     data.forEach(function(image) {
@@ -40,19 +40,19 @@ if (product_exists == 'false') {
         // function addToCart() {
         //     event.preventDefault();
         //     let prodId = this.value
-        //     fetch("http://127.0.0.1:5000/shoppingcart/" + prodId)
+        //     fetch("http://localhost:5000/shoppingcart/" + prodId)
         //     .then(() => {     
         //         checkItemsInCart();
         //     })
         // }
-        return fetch("http://127.0.0.1:5000/fetchCurrentImage")
+        return fetch("http://localhost:5000/fetchCurrentImage")
     })
     .then((res) => res.json())
     .then((data) => {
         data.forEach(function(image) {
         output += `<img src="../${image.productImage}" class="img-thumbnail" />`
         })
-        return fetch("http://127.0.0.1:5000/fetchCurrent")
+        return fetch("http://localhost:5000/fetchCurrent")
     })
     .then((res) => res.json())
     .then((data) => {
@@ -69,13 +69,13 @@ if (product_exists == 'false') {
         function addToCart() {
             event.preventDefault();
             let prodId = this.value
-            fetch("http://127.0.0.1:5000/shoppingcart/" + prodId)
+            fetch("http://localhost:5000/shoppingcart/" + prodId)
             .then(() => {     
                 checkItemsInCart();
             })
         }
     })
-    // fetch("http://127.0.0.1:5000/fetchCurrentImage")
+    // fetch("http://localhost:5000/fetchCurrentImage")
     //         .then((res) => res.json())
     //         .then((data) => {
     //             data.forEach(function(image) {
@@ -88,7 +88,7 @@ if (product_exists == 'false') {
 }
 
 function checkItemsInCart(){
-    fetch('http://127.0.0.1:5000/shoppingcart/countItems')
+    fetch('http://localhost:5000/shoppingcart/countItems')
     .then((res) => res.json())
     .then((data) => {
         itemsInCart = data.length;

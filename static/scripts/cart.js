@@ -41,7 +41,7 @@ completePayment.onclick = () => {
         paymentSuccessful = 'false';
     }
 
-    fetch(`http://127.0.0.1:5000/payment/complete/${paymentSuccessful}`, {
+    fetch(`http://localhost:5000/payment/complete/${paymentSuccessful}`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json, text/plain, */*',
@@ -59,7 +59,7 @@ completePayment.onclick = () => {
 }
 
 function displayCart() {
-    fetch('http://127.0.0.1:5000/shoppingcart/checkout/items')
+    fetch('http://localhost:5000/shoppingcart/checkout/items')
         .then((res) => res.json())
         .then((data) => {
             let output = ``
@@ -120,7 +120,7 @@ function displayCart() {
                 let cartId = this.value
                 let prodId = this.value1
                 console.log(prodId)
-                fetch('http://127.0.0.1:5000/shoppingcart/remove/' + cartId)
+                fetch('http://localhost:5000/shoppingcart/remove/' + cartId)
                 .then(() => {
                     displayCart();
                     if (document.getElementById('countInCart' + prodId).innerHTML == '1') {
@@ -133,7 +133,7 @@ function displayCart() {
             function addToCart() {
                 event.preventDefault();
                 let prodId = this.value
-                fetch("http://127.0.0.1:5000/shoppingcart/" + prodId)
+                fetch("http://localhost:5000/shoppingcart/" + prodId)
                 .then(() => {
                     displayCart();
                 })
@@ -144,7 +144,7 @@ function displayCart() {
 
 function deleteFromCart(shoppingCart_id, product_id) {
     event.preventDefault();
-    fetch('http://127.0.0.1:5000/shoppingcart/remove/' + shoppingCart_id)
+    fetch('http://localhost:5000/shoppingcart/remove/' + shoppingCart_id)
     if (document.getElementById('countInCart' + product_id).innerHTML == '1') {
         document.getElementById("cartId" + shoppingCart_id).remove();
     } else {
@@ -158,7 +158,7 @@ function deleteFromCart(shoppingCart_id, product_id) {
 }
 
 function checkItemsInCart() {
-    fetch('http://127.0.0.1:5000/shoppingcart/countItems')
+    fetch('http://localhost:5000/shoppingcart/countItems')
         .then((res) => res.json())
         .then((data) => {
             itemsInCart = data.length;

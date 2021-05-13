@@ -5,3 +5,5 @@ dataclasses
 flask_cors
 mysql-connector-python
 Flask==1.1.2
+google-api-python-client
+google-auth

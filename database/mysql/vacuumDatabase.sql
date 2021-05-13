@@ -33,6 +33,14 @@ CREATE TABLE IF NOT EXISTS users(
     PRIMARY KEY         (user_id)
 );
 
+CREATE TABLE IF NOT EXISTS googleUsers(
+    user_id             INT NOT NULL,
+    name                VARCHAR(30) NOT NULL,
+    email               VARCHAR(100) NOT NULL,
+    image               VARCHAR(500) NOT NULL,
+    PRIMARY KEY         (user_id)
+);
+
 CREATE TABLE IF NOT EXISTS orderHistory(
     orderNumber         INT NOT NULL AUTO_INCREMENT,
     dateAndTime         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

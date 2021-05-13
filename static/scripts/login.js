@@ -12,7 +12,7 @@ function login() {
         password: password,
     }
 
-    fetch(`http://127.0.0.1:5000/login`, {
+    fetch(`http://localhost:5000/login`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json, text/plain, */*',
@@ -24,7 +24,7 @@ function login() {
         .then((data) => {
 
             result.innerHTML = 'You are now logged in as ' + data.username
-            window.location.replace(`http://127.0.0.1:5000/profile`)
+            window.location.replace(`http://localhost:5000/profile`)
 
         })
         .catch((error) => {

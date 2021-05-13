@@ -6,11 +6,14 @@ import os
 from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 import mysql.connector
+from google.oauth2 import id_token as goog_token
+from google.auth.transport import requests as goog_req
 
 mysql_user = 'neremzky'
 mysql_pwd = 'passordNeremzky'
 mysql_host = 'datanettverk-portfolio2_database_1'
 mysql_db = 'everything'
+oauth_id = '327986808053-k9gr4qboqvo28psnnrqnqjem9qdehkn2.apps.googleusercontent.com'
 
 mydb = mysql.connector.connect(user = mysql_user, password = mysql_pwd, host = mysql_host, database = mysql_db, autocommit=True)
 
@@ -22,10 +25,10 @@ myresult = mycursor.fetchall()
 
 app = Flask(__name__)
 api = Api(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'     #/var/run/mysqld/mysqld.sock
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'     
 app.config['CORS_HEADERS'] = 'Content-Type'
 db = SQLAlchemy(app)
-cors = CORS(app, resources={r"/": {"origins": "http://127.0.0.1:5000/"}})
+cors = CORS(app, resources={r"/": {"origins": "http://localhost:5000/"}})
 UPLOAD_FOLDER = 'home/static/img'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -44,7 +47,7 @@ def renderIndex():
     return render_template('index.html', currentUser = currentUser)
 
 @app.route("/login", methods=['GET', 'POST'])
-@cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
+@cross_origin(origin='localhost',headers=['Content-Type','Authorization'])
 def login():
     global currentUser
     global currentUserId
@@ -99,8 +102,10 @@ def login():
     else:
         return render_template('login.html', currentUser = currentUser)
 
+
+
 @app.route("/logout", methods=['GET', 'POST'])
-@cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
+@cross_origin(origin='localhost',headers=['Content-Type','Authorization'])
 def logout():
     global currentUser
     currentUser = {}
@@ -108,7 +113,7 @@ def logout():
     return render_template('index.html', currentUser = currentUser)
 
 @app.route("/register", methods=['GET', 'POST'])
-@cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
+@cross_origin(origin='localhost',headers=['Content-Type','Authorization'])
 def register():
     if request.method == 'POST':
         reqdata = request.get_json()
@@ -128,7 +133,7 @@ def register():
         return render_template('register.html', currentUser = currentUser)
 
 @app.route("/fetchUsers", methods=['GET', 'POST'])
-@cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
+@cross_origin(origin='localhost',headers=['Content-Type','Authorization'])
 def fetchUsers():
     global json_data
     mycursor = mydb.cursor(buffered=True)
@@ -147,7 +152,7 @@ def profile():
     return render_template('profile.html', currentUser = currentUser)
 
 @app.route("/fetchProducts", methods=['GET', 'POST'])
-@cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
+@cross_origin(origin='localhost',headers=['Content-Type','Authorization'])
 def fetchProducts():
     global json_data
     mycursor = mydb.cursor(buffered=True)
@@ -162,12 +167,12 @@ def fetchProducts():
     return jsonify(json_data)
 
 @app.route("/fetchCurrent", methods=['GET', 'POST'])
-@cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
+@cross_origin(origin='localhost',headers=['Content-Type','Authorization'])
 def fetchCurrent():
     return jsonify(currentProduct)
 
 @app.route("/fetchCurrentImage", methods=['GET', 'POST'])
-@cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
+@cross_origin(origin='localhost',headers=['Content-Type','Authorization'])
 def fetchCurrentImage():
     global currentProductId
     json_data=[]
@@ -182,7 +187,7 @@ def fetchCurrentImage():
 
 
 @app.route("/product/<int:product_id>", methods=['GET', 'POST'])
-@cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
+@cross_origin(origin='localhost',headers=['Content-Type','Authorization'])
 def productDescription(product_id):
     global currentProduct
     global json_data
@@ -206,7 +211,7 @@ def shoppingcart():
     return render_template('shoppingcart.html', currentUser = currentUser)
 
 @app.route("/shoppingcart/<int:product_id>", methods=['GET', 'POST'])
-@cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
+@cross_origin(origin='localhost',headers=['Content-Type','Authorization'])
 def addToShoppingcart(product_id):
     global json_data
     for result in myresult:
@@ -218,7 +223,6 @@ def addToShoppingcart(product_id):
 
     items = json_data[product_id-1]
     itemValues = list(items.values())
-    print(itemValues)
     cart_data=[]
     for result in cartresult:
         json_data.append(dict(zip(row_headers,result)))
@@ -234,7 +238,7 @@ def checkout():
     return render_template('shoppingcart.html', currentUser = currentUser)
 
 @app.route("/shoppingcart/countItems", methods=['GET', 'POST'])
-@cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
+@cross_origin(origin='localhost',headers=['Content-Type','Authorization'])
 def checkNumberOfItems():    
     cartJson_data = []
     mycursor = mydb.cursor(buffered=True)
@@ -247,7 +251,7 @@ def checkNumberOfItems():
     return jsonify(cartJson_data)
 
 @app.route("/shoppingcart/checkout/items", methods=['GET', 'POST'])
-@cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
+@cross_origin(origin='localhost',headers=['Content-Type','Authorization'])
 def checkoutItems():
     cartJson_data = []
     mycursor = mydb.cursor(buffered=True)
@@ -260,7 +264,7 @@ def checkoutItems():
     return jsonify(cartJson_data)
 
 @app.route("/shoppingcart/remove/<int:shoppingcart_id>", methods=['GET', 'POST'])
-@cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
+@cross_origin(origin='localhost',headers=['Content-Type','Authorization'])
 def removeCheckoutItems(shoppingcart_id):
     sql = """DELETE FROM cartItems where shoppingcart_id="""+str(shoppingcart_id)
     mycursor = mydb.cursor(buffered=True)
@@ -279,7 +283,7 @@ def removeCheckoutItems(shoppingcart_id):
     return jsonify(cartJson_data)
 
 @app.route("/payment/complete/<string:paymentSuccessful>", methods=['GET', 'POST'])
-@cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
+@cross_origin(origin='localhost',headers=['Content-Type','Authorization'])
 def completePayment(paymentSuccessful):
     print(currentUserId)
     if paymentSuccessful == 'true':
@@ -317,21 +321,12 @@ def renderOrderHistory():
 def addproductsyup():
     return render_template('addproducts.html', currentUser = currentUser)
 
-@app.route('/form')
-def form():
-    return render_template('form.html', currentUser = currentUser)
- 
-@app.route('/upload', methods = ['POST', 'GET'])
-def upload():
-    if request.method == 'POST':
-        f = request.files['file']
-        print(f)
-        filename = secure_filename(f.filename)
-        f.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
-        return os.path.join(app.config['UPLOAD_FOLDER'],filename)
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route("/addproductsReal", methods=['GET', 'POST'])
-@cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
+@cross_origin(origin='localhost',headers=['Content-Type','Authorization'])
 def addProductsReal():
     if request.method == 'POST':
         pname = request.form['pname']
@@ -343,31 +338,36 @@ def addProductsReal():
         fullpaths = []
         filename = secure_filename(files[0].filename)
         filenames.append(filename)
-        print(filename)
         filepath = 'static/img/'+filename
         file_fullPath = os.path.join(app.config['UPLOAD_FOLDER'],filename)
-        if (file_fullPath == 'home/static/img/' ):
-            sql = """INSERT INTO products (productName, price, productInfoShort, productInfoLong, productImage) VALUES (%s, %s, %s, %s, %s)"""
-            val = (pname, price, pinfos, pinfol, 'static/img/defaultVacuum.jpg')
-            mycursor.execute(sql, val)
-            mydb.commit()
-        else:
-            files[0].save(file_fullPath)
-            sql = """INSERT INTO products (productName, price, productInfoShort, productInfoLong, productImage) VALUES (%s, %s, %s, %s, %s)"""
-            val = (pname, price, pinfos, pinfol, filepath)
-            mycursor.execute(sql, val)
-            mydb.commit()
-            sql = """SELECT product_id FROM products ORDER BY product_id DESC LIMIT 1;"""
-            mycursor.execute(sql)
-            prodid = mycursor.fetchone()
-            for i in range(len(files)):
-                filename = secure_filename(files[i].filename)
-                filepath = 'static/img/'+filename
-                fullpaths.append(filepath)
-                sql = """INSERT INTO productImages (product_id, productImage) VALUES (%s, %s)"""
-                val = (prodid[0], filepath)
+        if (allowed_file(filename)):
+            if (file_fullPath == 'home/static/img/' ):
+                sql = """INSERT INTO products (productName, price, productInfoShort, productInfoLong, productImage) VALUES (%s, %s, %s, %s, %s)"""
+                val = (pname, price, pinfos, pinfol, 'static/img/defaultVacuum.jpg')
                 mycursor.execute(sql, val)
-        return render_template('addproducts.html', currentUser = currentUser)
+                mydb.commit()
+            else:
+                files[0].save(file_fullPath)
+                sql = """INSERT INTO products (productName, price, productInfoShort, productInfoLong, productImage) VALUES (%s, %s, %s, %s, %s)"""
+                val = (pname, price, pinfos, pinfol, filepath)
+                mycursor.execute(sql, val)
+                mydb.commit()
+                sql = """SELECT product_id FROM products ORDER BY product_id DESC LIMIT 1;"""
+                mycursor.execute(sql)
+                prodid = mycursor.fetchone()
+                for i in range(len(files)):
+                    filename = secure_filename(files[i].filename)
+                    if (allowed_file(filename)):
+                        filepath = 'static/img/'+filename
+                        fullpaths.append(filepath)
+                        sql = """INSERT INTO productImages (product_id, productImage) VALUES (%s, %s)"""
+                        val = (prodid[0], filepath)
+                        mycursor.execute(sql, val)
+                        return render_template('addproducts.html', currentUser = currentUser)
+                    else:    
+                        return render_template('addproducts.html', currentUser = currentUser)
+        else:
+          return render_template('addproducts.html', currentUser = currentUser)      
     else:
         return render_template('addproducts.html', currentUser = currentUser)
 
