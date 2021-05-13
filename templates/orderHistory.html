@@ -20,7 +20,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
                 <div class="navbar-nav">
-                    <a class="nav-link" href="http://127.0.0.1:5000/">Home</a>
+                    <a class="nav-link active" aria-current="page" href="http://127.0.0.1:5000/">Home</a>
                     <a class="nav-link" href="http://127.0.0.1:5000/addproducts">Add new products</a>
                     <a class="nav-link" href="http://127.0.0.1:5000/shoppingcart">
                         <span>Shoppingcart</span>
@@ -37,8 +37,9 @@
         </div>
     </nav>
 
+
     <div class="container">
-        <h2 class="display-2">{{currentUser.username}}</h2>
+        <h2 class="display-2">Order history for {{currentUser.username}}</h2>
         <ul class="list-group" id="renderContent"></ul>
     </div>
     <script src="{{ url_for('static', filename='scripts/orderHistory.js') }}"></script>

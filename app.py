@@ -34,7 +34,7 @@ global admin
 
 currentProduct = {}
 currentUser = {}
-currentUserId = 0
+currentUserId = None
 json_data = []
 currentProductId = None
 
@@ -47,6 +47,7 @@ def renderIndex():
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def login():
     global currentUser
+    global currentUserId
     global json_data
     correctLogin = False
     mycursor = mydb.cursor(buffered=True)
@@ -69,6 +70,7 @@ def login():
                 if user['password'] == password:
                     correctLogin = True
                     currentUser = user
+                    currentUserId = user['user_id']
                     break
                 else: 
                     correctLogin = False
@@ -77,7 +79,6 @@ def login():
 
         if(correctLogin):
             if username == 'Admin' and password == 'Admin':
-                currentUserId = 0
                 db.session.commit()
                 admin = True
                 mysql_user = username
@@ -280,8 +281,12 @@ def removeCheckoutItems(shoppingcart_id):
 @app.route("/payment/complete/<string:paymentSuccessful>", methods=['GET', 'POST'])
 @cross_origin(origin='127.0.0.1',headers=['Content-Type','Authorization'])
 def completePayment(paymentSuccessful):
-    global currentUserId
+    print(currentUserId)
     if paymentSuccessful == 'true':
+        if currentUser == {}:
+            mycursor = mydb.cursor(buffered=True)
+            mycursor.execute("DELETE FROM cartItems")
+            return paymentSuccessful
         args = [currentUserId]
         mycursor = mydb.cursor(buffered=True)
         mycursor.callproc('addToOrderHistory', args)

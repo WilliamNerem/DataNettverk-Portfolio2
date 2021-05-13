@@ -51,7 +51,7 @@ BEGIN
     DELETE FROM cartItems;
 END //
 DELIMITER ;
-#
+
 
 CREATE TABLE IF NOT EXISTS productImages(
     image_id            INT NOT NULL AUTO_INCREMENT,
@@ -109,7 +109,7 @@ GRANT ALL PRIVILEGES ON *.* TO 'neremzky';
 
 CREATE USER IF NOT EXISTS 'Admin' IDENTIFIED BY 'fdsKG39F!ldk0dsLdM3@';
 GRANT ALL PRIVILEGES ON *.* TO 'Admin';
-#
+
 INSERT INTO users (username, firstname, lastname, email, phone, password)
 VALUES
 ('Admin', 'Admin', 'Admin', 'Admin@Admin.com', '12345678', 'fdsKG39F!ldk0dsLdM3@')

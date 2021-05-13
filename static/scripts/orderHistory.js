@@ -1,13 +1,12 @@
-let output = '';
 let currentUserId = document.getElementById('currentUserId').innerHTML;
 
 fetch(`http://127.0.0.1:5000/orderHistory/${currentUserId}`)
 .then((res) => res.json())
 .then((data) => {
+    output = '';
     let addedToCart = []
-    console.log(data)
     currentDateAndTime = ''
-    data.forEach(function (product) {
+    data.slice().reverse().forEach(function (product) {
         if (product.dateAndTime != currentDateAndTime){
             currentDateAndTime = product.dateAndTime
             addedToCart = []
@@ -42,5 +41,4 @@ fetch(`http://127.0.0.1:5000/orderHistory/${currentUserId}`)
         }
     })
     document.getElementById('renderContent').innerHTML = output;
-    console.log(addedToCart)
 })
