@@ -50,6 +50,20 @@ function regUser() {
                         result.innerHTML = 'User added!'
 
                     })
+                    .then(() => {
+                        fetch(`http://127.0.0.1:5000/login`, {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json, text/plain, */*',
+                                'Content-type': 'application/json'
+                            },
+                            body: JSON.stringify(newUser)
+                        })
+                            .then(() => {
+                                window.location.replace(`http://127.0.0.1:5000/profile`)
+
+                            })
+                    })
                     .catch((error) => console.log(error))
             }
             else {
