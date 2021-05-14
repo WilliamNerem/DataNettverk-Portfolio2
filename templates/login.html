@@ -29,7 +29,8 @@
             <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
                 <div class="navbar-nav">
                     <a class="nav-link" href="http://localhost:5000/">Home</a>
-                    <a style="display: none;" id="addProducts" class="nav-link" href="http://localhost:5000/addproducts">Add new products</a>
+                    <a style="display: none;" id="addProducts" class="nav-link"
+                        href="http://localhost:5000/addproducts">Add new products</a>
                     <a class="nav-link" href="http://localhost:5000/shoppingcart">Shoppingcart</a>
                 </div>
             </div>
@@ -40,13 +41,17 @@
 
     <div class="container">
         <h2 class="display-2">Login</h2>
-        <form id="formLogin">
-            <label for="username">Username: </label>
-            <input type="text" id="username" name="username">
-            <label for="username">Password: </label>
-            <input type="password" id="password" name="password">
-            <button type="submit" id="loginBtn">Log in</button>
-            <a href="http://localhost:5000/register"><button type="button" id="regBtn">Register</button></a>
+        <form id="formLogin" class="col-3">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username: </label>
+                <input type="text" id="username" name="username" class="form-control" placeholder="Username">
+            </div>
+            <div class="mb-3">
+                <label for="username" class="form-label">Password: </label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="Password">
+            </div>
+            <button type="submit" id="loginBtn" class="btn btn-success">Log in</button>
+            <a href="http://localhost:5000/register"><button type="button" id="regBtn" class="btn btn-primary">Register</button></a>
         </form>
         <p id="result"></p>
     </div>

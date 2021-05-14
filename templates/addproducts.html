@@ -40,26 +40,36 @@
     </nav>
 
     <div class="container">
-        <h1>Add products</h1>
-        <form action="/addproductsReal" method="POST" enctype="multipart/form-data">
-            <label for="pname">Product name:</label><br>
-            <input type="text" id="pname" name="pname" required><br>
-            <label for="price">Price:</label><br>
-            <input type="number" id="price" name="price" min=1 required><br>
-            <label for="pinfos">Product info short:</label><br>
-            <input type="text" id="pinfos" name="pinfos" required><br>
-            <label for="pinfol">Product info long:</label><br>
-            <input type="text" id="pinfol" name="pinfol" required><br>
-            <label for="productimg">Product image:</label><br>
+        <h2 class="display-3">Add products</h2>
+        <form action="/addproductsReal" method="POST" enctype="multipart/form-data" class="row col-8">
+            <div class="col-md-10 mb-3">
+                <label for="pname" class="form-label">Product name:</label>
+                <input type="text" id="pname" name="pname" class="form-control" placeholder="Enter product name" required>
+            </div>
+            <div class="col-md-2 mb-3">
+                <label for="price" class="form-label">Price:</label>
+                <input type="number" id="price" name="price" class="form-control" min=1 placeholder="Enter price" required>
+            </div>
+            <div class="col-12 mb-3">
+                <label for="pinfos" class="form-label">Product info short:</label>
+                <input type="text" id="pinfos" name="pinfos" class="form-control" placeholder="Write a short product description" required>
+            </div>
+            <div class="col-12 mb-3">
+                <label for="pinfol" class="form-label">Product info long:</label>
+                <textarea class="form-control" rows="3" id="pinfol" name="pinfol" placeholder="Write a more detailed product description" required></textarea>
+            </div>
+            <label for="productimg" class="form-label">Product image:</label>
             <dl>
-            <input type="file" name="files[]" multiple="true" autocomplete="off"></input>
+                <input type="file" name="files[]" multiple="true" autocomplete="off" class="form-control"></input>
             </dl>
-            <input type="submit" value="Submit" />
-            <p style="color: green;">{{success}}</p>
-            <p style="color: red;">{{wentWrong}}</p>
+            <div class="col-2">
+                <button type="submit" class="btn btn-primary">Add product</button>
+                <p style="color: green;">{{success}}</p>
+                <p style="color: red;">{{wentWrong}}</p>
+            </div>
         </form>
     </div>
-    
+
     <script src="{{ url_for('static', filename='scripts/common.js') }}"></script>
 </body>
 
