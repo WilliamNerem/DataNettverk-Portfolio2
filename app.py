@@ -12,6 +12,7 @@ import prometheus_client
 from prometheus_client.core import CollectorRegistry
 from prometheus_client import Summary, Counter, Histogram, Gauge
 import time
+import base64
 
 mysql_user = 'default'
 mysql_pwd = 'fdsKG39F!ldk0dsLdM3@'
@@ -42,7 +43,6 @@ UPLOAD_FOLDER = 'home/static/img'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 SQLALCHEMY_TRACK_MODIFICATIONS = False
-global admin
 
 currentProduct = {}
 currentUser = {}
@@ -161,6 +161,29 @@ def requests_count():
     for k,v in graphs.items():
         res.append(prometheus_client.generate_latest(v))
     return Response(res, mimetype="text/plain")
+
+@app.route("/registerGoogle/<string:id_token>", methods=['GET', 'POST'])
+@cross_origin(origin='localhost',headers=['Content-Type','Authorization'])
+def registerGoogle(id_token):
+    id_token_split = id_token.split('.')
+
+    if (len(id_token_split) != 3): 
+        print('Wrong number of segments in token: %s' % id_token) 
+
+    b64string = id_token_split[1]
+    id_tokenBytes = b64string.encode('ascii') 
+    padded = id_tokenBytes + b'=' * (4 - len(id_tokenBytes) % 4) 
+    jsonId_token = json.loads(base64.b64decode(padded))
+    print(jsonId_token['given_name'])
+    print(jsonId_token['family_name'])
+    print(jsonId_token['email'])
+    print(jsonId_token['picture'])
+    # sql = """INSERT INTO googleUsers (user_id, name, email) VALUES (%s, %s, %s)"""
+    # val = (user_id, name, email)
+    # mycursor = mydb.cursor(buffered=True)
+    # mycursor.execute(sql, val)
+    # mydb.commit()
+    return render_template('register.html', currentUser = currentUser)
 
 @app.route("/fetchUsers", methods=['GET', 'POST'])
 @cross_origin(origin='localhost',headers=['Content-Type','Authorization'])

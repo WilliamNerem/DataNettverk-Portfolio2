@@ -22,6 +22,8 @@ CREATE TABLE IF NOT EXISTS cartItems(
     PRIMARY KEY         (shoppingcart_id)
 );
 
+SET @@AUTO_INCREMENT_INCREMENT=2;
+
 CREATE TABLE IF NOT EXISTS users(
     user_id             INT NOT NULL AUTO_INCREMENT,
     username            VARCHAR(30) NOT NULL,
@@ -32,14 +34,18 @@ CREATE TABLE IF NOT EXISTS users(
     password            VARCHAR(30) NOT NULL,
     PRIMARY KEY         (user_id)
 );
+ALTER TABLE users AUTO_INCREMENT = 0;
 
 CREATE TABLE IF NOT EXISTS googleUsers(
     user_id             INT NOT NULL,
     name                VARCHAR(30) NOT NULL,
     email               VARCHAR(100) NOT NULL,
-    image               VARCHAR(500) NOT NULL,
+    #image               VARCHAR(500) NOT NULL,
     PRIMARY KEY         (user_id)
 );
+ALTER TABLE googleUsers AUTO_INCREMENT = 0;
+
+SET @@AUTO_INCREMENT_INCREMENT=1;
 
 CREATE TABLE IF NOT EXISTS orderHistory(
     orderNumber         INT NOT NULL AUTO_INCREMENT,
@@ -123,10 +129,12 @@ GRANT SELECT ON cartItems TO 'default';
 GRANT SELECT ON productImages TO 'default';
 GRANT SELECT ON orderHistory TO 'default';
 GRANT SELECT ON users TO 'default';
+GRANT SELECT ON googleUsers TO 'default';
 GRANT INSERT ON orderHistory TO 'default';
 GRANT INSERT ON cartItems TO 'default';
 GRANT INSERT ON productImages TO 'default';
 GRANT INSERT ON users TO 'default';
+GRANT INSERT ON googleUsers TO 'default';
 GRANT DELETE ON cartItems TO 'default';
 
 

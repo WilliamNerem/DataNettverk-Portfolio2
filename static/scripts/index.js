@@ -11,6 +11,8 @@ if (user == 'Admin'){
     document.getElementById('addProducts').style.display = "inline"
 }
 
+
+
 fetch('http://localhost:5000/fetchProducts')
 .then((res) => res.json())
 .then((data) => {
@@ -84,33 +86,41 @@ fetch('http://localhost:5000/fetchProducts')
 
 var id_token = null;
 
-function onSignIn(googleUser) {
-    var profile = googleUser.getBasicProfile();
-    console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-    console.log('Name: ' + profile.getName());
-    console.log('Image URL: ' + profile.getImageUrl());
-    console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+// function onSignIn(googleUser) {
+//     var profile = googleUser.getBasicProfile();
+//     ID = profile.getId();
+//     Name = profile.getName();
+//     Email = profile.getEmail();
+//     ImageUrl = profile.getImageUrl();
+//     fetch(`http://localhost:5000/registerGoogle/${ID}/${Name}/${Email}/${ImageUrl}`)
+//     .then(() => {     
+//         window.location.replace(`http://localhost:5000/profile`)
+//     })
+//     console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+//     console.log('Name: ' + profile.getName());
+//     console.log('Image URL: ' + profile.getImageUrl());
+//     console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
 
-    id_token = googleUser.getAuthResponse().id_token;
-    console.log(`ID Token to pass to server: ${id_token}`)
+//     id_token = googleUser.getAuthResponse().id_token;
+//     console.log(`ID Token to pass to server: ${id_token}`)
 
-    logged_in = profile;
+//     logged_in = profile;
 
-    // Render again to get the logged in users card
-    // updated from the google profile
-    remove_users();
-    render_users(users);
-}
-function signOut() {
-    var auth2 = gapi.auth2.getAuthInstance();
-    auth2.signOut().then(function () {
-      console.log('User signed out.');
-      logged_in = null;
-      remove_users();
-      load_users();
-    });
-    id_token = null;
-}
+//     // Render again to get the logged in users card
+//     // updated from the google profile
+//     remove_users();
+//     render_users(users);
+// }
+// function signOut() {
+//     var auth2 = gapi.auth2.getAuthInstance();
+//     auth2.signOut().then(function () {
+//       console.log('User signed out.');
+//       logged_in = null;
+//       remove_users();
+//       load_users();
+//     });
+//     id_token = null;
+// }
 
 function checkItemsInCart(){
     fetch('http://localhost:5000/shoppingcart/countItems')

@@ -18,3 +18,21 @@ function logout() {
 function orderHistory() {
     window.location.replace(`http://localhost:5000/orderHistory`)
 }
+
+function onSuccess(googleUser){
+    var profile = googleUser.getBasicProfile();
+    id_token = googleUser.getAuthResponse().id_token;
+    logged_in = profile;
+}
+
+function signOut() {
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+      console.log('User signed out.');
+      logged_in = null;
+      remove_users();
+      load_users();
+    });
+    id_token = null;
+    window.location.replace('http://localhost:5000/')
+}
