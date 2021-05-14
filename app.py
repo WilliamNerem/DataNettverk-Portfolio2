@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, jsonify
+from flask import Flask, request, Response, render_template, jsonify
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 import json
@@ -8,6 +8,10 @@ from werkzeug.utils import secure_filename
 import mysql.connector
 from google.oauth2 import id_token as goog_token
 from google.auth.transport import requests as goog_req
+import prometheus_client
+from prometheus_client.core import CollectorRegistry
+from prometheus_client import Summary, Counter, Histogram, Gauge
+import time
 
 mysql_user = 'default'
 mysql_pwd = 'fdsKG39F!ldk0dsLdM3@'
@@ -22,6 +26,11 @@ mycursor.execute("SELECT * FROM products")
 
 row_headers=[x[0] for x in mycursor.description]
 myresult = mycursor.fetchall()
+
+_INF = float("inf")
+graphs = {}
+graphs['c'] = Counter('python_request_operations_total', 'The total number of processed requests')
+graphs['h'] = Histogram('python_request_duration_seconds', 'Histogram for the duration in seconds.', buckets=(1, 2, 5, 6, 10, _INF))
 
 app = Flask(__name__)
 api = Api(app)
@@ -44,11 +53,13 @@ currentProductId = None
 
 @app.route("/", methods=['GET', 'POST'])
 def renderIndex():
+    graphs['c'].inc()
     return render_template('index.html', currentUser = currentUser)
 
 @app.route("/login", methods=['GET', 'POST'])
 @cross_origin(origin='localhost',headers=['Content-Type','Authorization'])
 def login():
+    start = time.time()
     global currentUser
     global currentUserId
     global json_data
@@ -87,6 +98,8 @@ def login():
             mysql_host = 'datanettverk-portfolio2_database_1'
             mysql_db = 'everything'
             mydb = mysql.connector.connect(user = mysql_user, password = mysql_pwd, host = mysql_host, database = mysql_db, autocommit=True)
+            end = time.time()
+            graphs['h'].observe(end - start)
             return jsonify(currentUser)
         return render_template('login.html', currentUser = currentUser)
 
@@ -129,6 +142,13 @@ def register():
 
     else:
         return render_template('register.html', currentUser = currentUser)
+
+@app.route("/metrics")
+def requests_count():
+    res = []
+    for k,v in graphs.items():
+        res.append(prometheus_client.generate_latest(v))
+    return Response(res, mimetype="text/plain")
 
 @app.route("/fetchUsers", methods=['GET', 'POST'])
 @cross_origin(origin='localhost',headers=['Content-Type','Authorization'])

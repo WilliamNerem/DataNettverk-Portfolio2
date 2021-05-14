@@ -7,3 +7,4 @@ mysql-connector-python
 Flask==1.1.2
 google-api-python-client
 google-auth
+prometheus_client==0.7.1
