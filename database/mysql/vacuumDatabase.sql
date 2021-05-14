@@ -60,6 +60,17 @@ BEGIN
 END //
 DELIMITER ;
 
+DELIMITER //
+CREATE PROCEDURE grantAccess(_username VARCHAR(30), _firstname VARCHAR(30), _lastname VARCHAR(30), _email VARCHAR(100), _phone VARCHAR(10), _password VARCHAR(30))
+BEGIN
+    set @sql = concat("CREATE USER IF NOT EXISTS '",`_username`,"' IDENTIFIED BY '",`_password`,"'");
+    PREPARE stmt1 FROM @sql;
+    EXECUTE stmt1;
+    DEALLOCATE PREPARE stmt1;
+    INSERT INTO users (username, firstname, lastname, email, phone, password) VALUES (_username, _firstname, _lastname, _email, _phone, _password);
+END //
+DELIMITER ;
+
 
 CREATE TABLE IF NOT EXISTS productImages(
     image_id            INT NOT NULL AUTO_INCREMENT,
@@ -117,7 +128,6 @@ GRANT INSERT ON cartItems TO 'default';
 GRANT INSERT ON productImages TO 'default';
 GRANT INSERT ON users TO 'default';
 GRANT DELETE ON cartItems TO 'default';
-
 
 
 CREATE USER IF NOT EXISTS 'Admin' IDENTIFIED BY 'Admin';

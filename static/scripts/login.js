@@ -27,7 +27,6 @@ function login() {
         })
         .then((res) => res.json())
         .then((data) => {
-
             result.innerHTML = 'You are now logged in as ' + data.username
             window.location.replace(`http://localhost:5000/profile`)
 

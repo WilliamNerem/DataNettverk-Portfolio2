@@ -133,11 +133,23 @@ def register():
         email = reqdata['email']
         phone = reqdata['phone']
         password = reqdata['password']
-        sql = """INSERT INTO users (username, firstname, lastname, email, phone, password) VALUES (%s, %s, %s, %s, %s, %s)"""
-        val = (username, firstname, lastname, email, phone, password)
+        mysql_host = 'datanettverk-portfolio2_database_1'
+        mysql_db = 'everything'
+        mydb = mysql.connector.connect(user = 'root', password = 'root', host = mysql_host, database = mysql_db, autocommit=True)
+        args = [username, firstname, lastname, email, phone, password]
         mycursor = mydb.cursor(buffered=True)
-        mycursor.execute(sql, val)
+        mycursor.callproc('grantAccess', args)
+        mycursor.close()
         mydb.commit()
+
+        sql = "GRANT SELECT ON products TO "+ username +";\nGRANT SELECT ON cartItems TO "+ username +";\nGRANT SELECT ON productImages TO "+ username +";\nGRANT SELECT ON orderHistory TO "+ username +";\nGRANT SELECT ON users TO "+ username +";\nGRANT INSERT ON orderHistory TO "+ username +";\nGRANT INSERT ON cartItems TO "+ username +";\nGRANT INSERT ON productImages TO "+ username +";\nGRANT INSERT ON users TO "+ username +";\nGRANT DELETE ON cartItems TO "+ username +";\nGRANT EXECUTE ON PROCEDURE addToOrderHistory TO "+ username +";"
+        mycursor = mydb.cursor(buffered=True)
+        mycursor.execute(sql)
+        mycursor.close()
+        mydb.commit()
+        
+
+        mydb = mysql.connector.connect(user = username, password = password, host = mysql_host, database = mysql_db, autocommit=True)
         return render_template('register.html', currentUser = currentUser)
 
     else:
