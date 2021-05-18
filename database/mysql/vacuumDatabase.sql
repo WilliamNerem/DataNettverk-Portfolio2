@@ -138,9 +138,9 @@ GRANT INSERT ON googleUsers TO 'default';
 GRANT DELETE ON cartItems TO 'default';
 
 
-CREATE USER IF NOT EXISTS 'Admin' IDENTIFIED BY 'Admin';
-GRANT ALL PRIVILEGES ON *.* TO 'Admin';
+CREATE USER IF NOT EXISTS 'admin' IDENTIFIED BY 'Admin';
+GRANT ALL PRIVILEGES ON *.* TO 'admin';
 
 INSERT INTO users (username, firstname, lastname, email, phone, password)
 VALUES
-('Admin', 'Admin', 'Admin', 'Admin@Admin.com', '12345678', 'Admin')
+('admin', 'Admin', 'Admin', 'Admin@Admin.com', '12345678', 'Admin')

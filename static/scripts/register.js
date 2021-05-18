@@ -10,7 +10,7 @@ if (user == 'Admin'){
 function regUser() {
     event.preventDefault();
 
-    const username = document.getElementById('username').value;
+    const username = document.getElementById('username').value.toLowerCase();
     const firstname = document.getElementById('firstname').value;
     const lastname = document.getElementById('lastname').value;
     const email = document.getElementById('email').value;
