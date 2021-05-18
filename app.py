@@ -9,8 +9,7 @@ import mysql.connector
 from google.oauth2 import id_token as goog_token
 from google.auth.transport import requests as goog_req
 import prometheus_client
-from prometheus_client.core import CollectorRegistry
-from prometheus_client import Summary, Counter, Histogram, Gauge
+from prometheus_flask_exporter import PrometheusMetrics
 import time
 import base64
 
@@ -28,10 +27,6 @@ mycursor.execute("SELECT * FROM products")
 row_headers=[x[0] for x in mycursor.description]
 myresult = mycursor.fetchall()
 
-_INF = float("inf")
-graphs = {}
-graphs['c'] = Counter('python_request_operations_total', 'The total number of processed requests')
-graphs['h'] = Histogram('python_request_duration_seconds', 'Histogram for the duration in seconds.', buckets=(1, 2, 5, 6, 10, _INF))
 
 app = Flask(__name__)
 api = Api(app)
@@ -43,6 +38,9 @@ UPLOAD_FOLDER = 'home/static/img'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 SQLALCHEMY_TRACK_MODIFICATIONS = False
+global admin
+metrics = PrometheusMetrics(app=app)
+metrics.info("app_info", "Overview for MWM application", version="1.0.0")
 
 currentProduct = {}
 currentUser = {}
@@ -54,13 +52,11 @@ prefilledUsername = ''
 
 @app.route("/", methods=['GET', 'POST'])
 def renderIndex():
-    graphs['c'].inc()
     return render_template('index.html', currentUser = currentUser)
 
 @app.route("/login", methods=['GET', 'POST'])
 @cross_origin(origin='localhost',headers=['Content-Type','Authorization'])
 def login():
-    start = time.time()
     global currentUser
     global currentUserId
     global json_data
@@ -100,7 +96,6 @@ def login():
             mysql_db = 'everything'
             mydb = mysql.connector.connect(user = mysql_user, password = mysql_pwd, host = mysql_host, database = mysql_db, autocommit=True)
             end = time.time()
-            graphs['h'].observe(end - start)
             return jsonify(currentUser)
         return render_template('login.html', currentUser = currentUser)
 
@@ -168,8 +163,8 @@ def register():
     else:
         return render_template('register.html', currentUser = currentUser, prefilledUsername = prefilledUsername)
 
-@app.route("/metrics")
-def requests_count():
+#@app.route("/metrics")
+#def requests_count():
     res = []
     for k,v in graphs.items():
         res.append(prometheus_client.generate_latest(v))
