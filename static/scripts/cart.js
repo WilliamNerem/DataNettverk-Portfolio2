@@ -11,11 +11,6 @@ let paymentSuccessful = 'false';
 const sleep = (milliseconds) => {
     return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
-user = document.getElementById('currentUser').innerHTML
-if (user == 'Admin'){
-    document.getElementById('addProducts').style.display = "inline"
-}
-
 
 discountForm.onsubmit = () => {
     event.preventDefault();
@@ -142,7 +137,7 @@ function displayCart() {
                     displayCart();
                 })
             }
-            checkItemsInCart();
+            checkItemsAndPriceInCart();
         })
 }
 
@@ -157,11 +152,11 @@ function deleteFromCart(shoppingCart_id, product_id) {
         })
     }
     sleep(10).then(() => {
-        checkItemsInCart();
+        checkItemsAndPriceInCart();
     })
 }
 
-function checkItemsInCart() {
+function checkItemsAndPriceInCart() {
     fetch('http://localhost:5000/shoppingcart/countItems')
         .then((res) => res.json())
         .then((data) => {

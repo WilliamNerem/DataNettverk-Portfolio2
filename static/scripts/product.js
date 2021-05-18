@@ -1,12 +1,7 @@
-let output = '';
+output = '';
 let product_exists = document.getElementById('product_exists').innerHTML;
 let itemsInCart = 0;
 checkItemsInCart();
-
-user = document.getElementById('currentUser').innerHTML
-if (user == 'Admin'){
-    document.getElementById('addProducts').style.display = "inline"
-}
 
 if (product_exists == 'false') {
     output = `
@@ -90,14 +85,4 @@ if (product_exists == 'false') {
     //         })
     
     
-}
-
-function checkItemsInCart(){
-    fetch('http://localhost:5000/shoppingcart/countItems')
-    .then((res) => res.json())
-    .then((data) => {
-        itemsInCart = data.length;
-        document.getElementById('shoppingCart').innerHTML = `${itemsInCart}`
-    })
-
 }

@@ -137,7 +137,7 @@ GRANT INSERT ON users TO 'default';
 GRANT INSERT ON googleUsers TO 'default';
 GRANT DELETE ON cartItems TO 'default';
 
-
+#
 CREATE USER IF NOT EXISTS 'admin' IDENTIFIED BY 'Admin';
 GRANT ALL PRIVILEGES ON *.* TO 'admin';
 

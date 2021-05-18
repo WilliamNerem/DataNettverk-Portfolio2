@@ -1,10 +1,6 @@
 document.getElementById('logout').addEventListener('click', logout);
 document.getElementById('orderHistory').addEventListener('click', orderHistory)
-
-user = document.getElementById('currentUser').innerHTML
-if (user == 'Admin'){
-    document.getElementById('addProducts').style.display = "inline"
-}
+checkItemsInCart();
 
 function logout() {
 

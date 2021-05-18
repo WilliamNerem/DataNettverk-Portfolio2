@@ -1,10 +1,6 @@
 document.getElementById('formLogin').addEventListener('submit', login);
 const result = document.getElementById('result');
-
-user = document.getElementById('currentUser').innerHTML
-if (user == 'Admin'){
-    document.getElementById('addProducts').style.display = "inline"
-}
+checkItemsInCart();
 
 function login() {
     event.preventDefault();

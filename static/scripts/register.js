@@ -1,11 +1,7 @@
 document.getElementById('formReg').addEventListener('submit', regUser);
 let userExists = false;
 const result = document.getElementById('result');
-
-user = document.getElementById('currentUser').innerHTML
-if (user == 'Admin'){
-    document.getElementById('addProducts').style.display = "inline"
-}
+checkItemsInCart();
 
 function regUser() {
     event.preventDefault();
