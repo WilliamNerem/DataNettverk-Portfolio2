@@ -44,6 +44,7 @@
             </div>
             <span id="loginLink"></span>
             <div id="currentUser" style="display: none;">{{currentUser.username}}</div>
+            <div id="prefilledUsername" style="display: none;">{{prefilledUsername}}</div>
         </div>
     </nav>
 
@@ -58,7 +59,7 @@
             <div class="col-md-6">
                 <label for="password" class="form-label">Password: </label>
                 <input type="password" id="password" name="password" class="form-control"
-                    placeholder="Must be between 4-30 characters" minlength="4" maxlength="30" required>
+                    placeholder="Must be between 4-30 characters" minlength="4" maxlength="30" autocomplete="new-password" required>
             </div>
             <div class="col-md-6">
                 <label for="firstname" class="form-label">First Name: </label>

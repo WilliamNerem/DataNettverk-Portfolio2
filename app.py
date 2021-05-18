@@ -49,6 +49,7 @@ currentUser = {}
 currentUserId = None
 json_data = []
 currentProductId = None
+prefilledUsername = ''
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -122,6 +123,18 @@ def logout():
     mydb = mysql.connector.connect(user = mysql_user, password = mysql_pwd, host = mysql_host, database = mysql_db, autocommit=True)
     return render_template('index.html', currentUser = currentUser)
 
+@app.route("/goToRegister", methods=['GET', 'POST'])
+@cross_origin(origin='localhost',headers=['Content-Type','Authorization'])
+def goToRegister():
+    global prefilledUsername
+    if request.method == 'POST':
+        reqdata = request.get_json()
+        username = reqdata['username']
+        prefilledUsername = username
+        return render_template('register.html', currentUser = currentUser, prefilledUsername = prefilledUsername)
+    else:
+        return render_template('register.html', currentUser = currentUser, prefilledUsername = prefilledUsername)
+
 @app.route("/register", methods=['GET', 'POST'])
 @cross_origin(origin='localhost',headers=['Content-Type','Authorization'])
 def register():
@@ -150,10 +163,10 @@ def register():
         
 
         mydb = mysql.connector.connect(user = username, password = password, host = mysql_host, database = mysql_db, autocommit=True)
-        return render_template('register.html', currentUser = currentUser)
+        return render_template('register.html', currentUser = currentUser, prefilledUsername = prefilledUsername)
 
     else:
-        return render_template('register.html', currentUser = currentUser)
+        return render_template('register.html', currentUser = currentUser, prefilledUsername = prefilledUsername)
 
 @app.route("/metrics")
 def requests_count():
@@ -183,7 +196,7 @@ def registerGoogle(id_token):
     # mycursor = mydb.cursor(buffered=True)
     # mycursor.execute(sql, val)
     # mydb.commit()
-    return render_template('register.html', currentUser = currentUser)
+    return render_template('register.html', currentUser = currentUser, prefilledUsername = prefilledUsername)
 
 @app.route("/fetchUsers", methods=['GET', 'POST'])
 @cross_origin(origin='localhost',headers=['Content-Type','Authorization'])

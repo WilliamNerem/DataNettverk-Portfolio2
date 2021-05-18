@@ -2,6 +2,7 @@ document.getElementById('formReg').addEventListener('submit', regUser);
 let userExists = false;
 const result = document.getElementById('result');
 checkItemsInCart();
+document.getElementById('username').value = document.getElementById('prefilledUsername').innerHTML;
 
 function regUser() {
     event.preventDefault();
