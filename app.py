@@ -48,6 +48,7 @@ currentUserId = None
 json_data = []
 currentProductId = None
 prefilledUsername = ''
+googleLogin = False
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -109,6 +110,9 @@ def login():
 def logout():
     global currentUser
     global mydb
+    global currentUserId
+    global googleLogin
+    googleLogin = False
     currentUser = {}
     currentUserId = None
     mysql_user = 'default'
@@ -150,7 +154,7 @@ def register():
         mycursor.close()
         mydb.commit()
 
-        sql = "GRANT SELECT ON products TO "+ username +";\nGRANT SELECT ON cartItems TO "+ username +";\nGRANT SELECT ON productImages TO "+ username +";\nGRANT SELECT ON orderHistory TO "+ username +";\nGRANT SELECT ON users TO "+ username +";\nGRANT INSERT ON orderHistory TO "+ username +";\nGRANT INSERT ON cartItems TO "+ username +";\nGRANT INSERT ON productImages TO "+ username +";\nGRANT INSERT ON users TO "+ username +";\nGRANT DELETE ON cartItems TO "+ username +";\nGRANT EXECUTE ON PROCEDURE addToOrderHistory TO "+ username +";"
+        sql = "GRANT SELECT ON products TO "+ username +";\nGRANT SELECT ON cartItems TO "+ username +";\nGRANT SELECT ON productImages TO "+ username +";\nGRANT SELECT ON orderHistory TO "+ username +";\nGRANT SELECT ON users TO "+ username +";\nGRANT SELECT ON googleUsers TO "+ username +";\nGRANT INSERT ON orderHistory TO "+ username +";\nGRANT INSERT ON cartItems TO "+ username +";\nGRANT INSERT ON productImages TO "+ username +";\nGRANT INSERT ON users TO "+ username +";\nGRANT INSERT ON googleUsers TO "+ username +";\nGRANT DELETE ON cartItems TO "+ username +";\nGRANT EXECUTE ON PROCEDURE addToOrderHistory TO "+ username +";"
         mycursor = mydb.cursor(buffered=True)
         mycursor.execute(sql)
         mycursor.close()
@@ -173,6 +177,11 @@ def register():
 @app.route("/registerGoogle/<string:id_token>", methods=['GET', 'POST'])
 @cross_origin(origin='localhost',headers=['Content-Type','Authorization'])
 def registerGoogle(id_token):
+    global googleLogin
+    global currentUser
+    global currentUserId
+    global mydb
+    googleLogin = True
     id_token_split = id_token.split('.')
 
     if (len(id_token_split) != 3): 
@@ -182,15 +191,37 @@ def registerGoogle(id_token):
     id_tokenBytes = b64string.encode('ascii') 
     padded = id_tokenBytes + b'=' * (4 - len(id_tokenBytes) % 4) 
     jsonId_token = json.loads(base64.b64decode(padded))
-    print(jsonId_token['given_name'])
-    print(jsonId_token['family_name'])
-    print(jsonId_token['email'])
-    print(jsonId_token['picture'])
     # sql = """INSERT INTO googleUsers (user_id, name, email) VALUES (%s, %s, %s)"""
     # val = (user_id, name, email)
     # mycursor = mydb.cursor(buffered=True)
     # mycursor.execute(sql, val)
     # mydb.commit()
+    username = jsonId_token['given_name'] + jsonId_token['family_name']
+    mydb = mysql.connector.connect(user = 'root', password = 'root', host = mysql_host, database = mysql_db, autocommit=True)
+    args = [username, jsonId_token['given_name'], jsonId_token['family_name'], jsonId_token['email'], jsonId_token['picture']]
+    mycursor = mydb.cursor(buffered=True)
+    mycursor.callproc('grantGoogleAccess', args)
+    
+    sql = "GRANT SELECT ON products TO "+ username +";\nGRANT SELECT ON cartItems TO "+ username +";\nGRANT SELECT ON productImages TO "+ username +";\nGRANT SELECT ON orderHistory TO "+ username +";\nGRANT SELECT ON users TO "+ username +";\nGRANT SELECT ON googleUsers TO "+ username +";\nGRANT INSERT ON orderHistory TO "+ username +";\nGRANT INSERT ON cartItems TO "+ username +";\nGRANT INSERT ON productImages TO "+ username +";\nGRANT INSERT ON users TO "+ username +";\nGRANT INSERT ON googleUsers TO "+ username +";\nGRANT DELETE ON cartItems TO "+ username +";\nGRANT EXECUTE ON PROCEDURE addToOrderHistory TO "+ username +";"
+    mycursor = mydb.cursor(buffered=True)
+    mycursor.execute(sql)
+    mycursor.close()
+    mydb = mysql.connector.connect(user = username, password = "7tbr23!", host = 'datanettverk-portfolio2_database_1', database = 'everything', autocommit=True)
+
+    mycursor = mydb.cursor(buffered=True)
+    mycursor.execute("SELECT * FROM googleUsers WHERE email='"+str(jsonId_token['email'])+"'")
+    mydb.commit()
+    row_headers=[x[0] for x in mycursor.description]
+    myresult = mycursor.fetchall()
+    mycursor.close()
+
+    currentUser = dict(zip(row_headers,myresult[0]))
+    mycursor = mydb.cursor(buffered=True)
+    mycursor.execute("SELECT user_id FROM googleUsers WHERE email='"+str(jsonId_token['email'])+"'")
+    myresult = mycursor.fetchall()
+    for row in myresult:
+        currentUserId = row[0]
+    
     return render_template('register.html', currentUser = currentUser, prefilledUsername = prefilledUsername)
 
 @app.route("/fetchUsers", methods=['GET', 'POST'])
@@ -198,6 +229,9 @@ def registerGoogle(id_token):
 def fetchUsers():
     global json_data
     mycursor = mydb.cursor(buffered=True)
+    # if googleLogin:
+    #     mycursor.execute("SELECT * FROM googleUsers")
+    # else:
     mycursor.execute("SELECT * FROM users")
     mydb.commit()
     row_headers=[x[0] for x in mycursor.description]

@@ -22,7 +22,8 @@ CREATE TABLE IF NOT EXISTS cartItems(
     PRIMARY KEY         (shoppingcart_id)
 );
 
-SET @@AUTO_INCREMENT_INCREMENT=2;
+SET GLOBAL auto_increment_increment=5;
+SET @@auto_increment_offset=1;
 
 CREATE TABLE IF NOT EXISTS users(
     user_id             INT NOT NULL AUTO_INCREMENT,
@@ -34,18 +35,18 @@ CREATE TABLE IF NOT EXISTS users(
     password            VARCHAR(30) NOT NULL,
     PRIMARY KEY         (user_id)
 );
-ALTER TABLE users AUTO_INCREMENT = 0;
+
 
 CREATE TABLE IF NOT EXISTS googleUsers(
-    user_id             INT NOT NULL,
-    name                VARCHAR(30) NOT NULL,
+    user_id             INT NOT NULL AUTO_INCREMENT,
+    username            VARCHAR(30) NOT NULL,
+    firstname           VARCHAR(30) NOT NULL,
+    lastname            VARCHAR(30) NOT NULL,
     email               VARCHAR(100) NOT NULL,
-    #image               VARCHAR(500) NOT NULL,
+    image               VARCHAR(500) NOT NULL,
     PRIMARY KEY         (user_id)
-);
-ALTER TABLE googleUsers AUTO_INCREMENT = 0;
+) AUTO_INCREMENT=1000;
 
-SET @@AUTO_INCREMENT_INCREMENT=1;
 
 CREATE TABLE IF NOT EXISTS orderHistory(
     orderNumber         INT NOT NULL AUTO_INCREMENT,
@@ -74,6 +75,21 @@ BEGIN
     EXECUTE stmt1;
     DEALLOCATE PREPARE stmt1;
     INSERT INTO users (username, firstname, lastname, email, phone, password) VALUES (_username, _firstname, _lastname, _email, _phone, _password);
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE grantGoogleAccess(_username VARCHAR(30), _firstname VARCHAR(30), _lastname VARCHAR(30), _email VARCHAR(100), _picture VARCHAR(500))
+BEGIN
+    set @sql = concat("CREATE USER IF NOT EXISTS '",`_username`,"' IDENTIFIED BY '7tbr23!'");
+    PREPARE stmt1 FROM @sql;
+    EXECUTE stmt1;
+    DEALLOCATE PREPARE stmt1;
+    INSERT INTO googleUsers (username, firstname, lastname, email, image)
+    SELECT * FROM (SELECT _username, _firstname, _lastname, _email, _picture) AS temp
+    WHERE NOT EXISTS (
+        SELECT email FROM googleUsers WHERE email = _email
+    ) LIMIT 1;
 END //
 DELIMITER ;
 
@@ -138,6 +154,7 @@ GRANT INSERT ON googleUsers TO 'default';
 GRANT DELETE ON cartItems TO 'default';
 
 #
+
 CREATE USER IF NOT EXISTS 'admin' IDENTIFIED BY 'Admin';
 GRANT ALL PRIVILEGES ON *.* TO 'admin';
 

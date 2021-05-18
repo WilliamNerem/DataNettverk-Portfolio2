@@ -30,5 +30,6 @@ function signOut() {
       load_users();
     });
     id_token = null;
+    fetch(`http://localhost:5000/logout`)
     window.location.replace('http://localhost:5000/')
 }

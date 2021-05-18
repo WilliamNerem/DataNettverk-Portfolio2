@@ -1,12 +1,15 @@
 document.getElementById('formLogin').addEventListener('submit', login);
-document.getElementById('regBtn').addEventListener('click', register);
 const result = document.getElementById('result');
-checkItemsInCart();
+
+user = document.getElementById('currentUser').innerHTML
+if (user == 'Admin'){
+    document.getElementById('addProducts').style.display = "inline"
+}
 
 function login() {
     event.preventDefault();
 
-    const username = document.getElementById('username').value.toLowerCase();
+    const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
     const user = {
@@ -33,28 +36,6 @@ function login() {
             result.innerHTML = 'Wrong username or password!';
         })
 
-}
-
-function register() {
-
-    const username = document.getElementById('username').value.toLowerCase();
-
-    const userNotFound = {
-        username: username,
-    }
-
-    fetch(`http://localhost:5000/goToRegister`, {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json, text/plain, */*',
-            'Content-type': 'application/json'
-        },
-        body: JSON.stringify(userNotFound)
-    })
-    .then(() => {
-        window.location.replace(`http://localhost:5000/register`)
-    })
-    .catch((error) => console.log(error))
 }
 
 var id_token = null;
