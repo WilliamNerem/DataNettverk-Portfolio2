@@ -1,10 +1,12 @@
 .display-flex {
     display: flex;
     margin: 1rem;
+    align-items: baseline;
+    float: right;
 }
 
 .display-flex .addToCart {
-    margin-left: 15rem;
+    margin-left: 2rem;
 }
 
 .container {
@@ -86,4 +88,17 @@ hr.solid {
 
 .fs-1rem {
     font-size: 1.25rem;
+}
+
+.carousel-img {
+    margin: auto;
+}
+
+.carousel {
+    border: solid 2px lightgrey;
+    padding: 2rem;
+}
+
+.product-info {
+    width: 50%;
 }
