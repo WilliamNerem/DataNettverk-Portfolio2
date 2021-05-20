@@ -81,6 +81,6 @@ function onSignIn(googleUser) {
 
     // Render again to get the logged in users card
     // updated from the google profile
-    remove_users();
-    render_users(users);
+    // remove_users();
+    // render_users(users);
 }

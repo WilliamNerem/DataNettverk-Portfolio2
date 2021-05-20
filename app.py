@@ -192,21 +192,38 @@ def registerGoogle(id_token):
     id_tokenBytes = b64string.encode('ascii') 
     padded = id_tokenBytes + b'=' * (4 - len(id_tokenBytes) % 4) 
     jsonId_token = json.loads(base64.b64decode(padded))
+
+    print(jsonId_token)
+
+    try:
+        firstname = jsonId_token['given_name']
+    except:
+        firstname = ""
+    try:
+        lastname = jsonId_token['family_name']
+    except:
+        lastname = ""
     
-    username = jsonId_token['given_name'] + jsonId_token['family_name']
+    username = firstname + lastname
+    if username == "":
+        # firstname = 'NoFirstname'
+        # lastname = 'NoLastname'
+        username = jsonId_token['email']
+        # username = username.replace('-', '')
+        # username = username.replace(' ', '')
     mydb = mysql.connector.connect(user = 'root', password = 'root', host = mysql_host, database = mysql_db, autocommit=True)
-    args = [username, jsonId_token['given_name'], jsonId_token['family_name'], jsonId_token['email'], jsonId_token['picture']]
+    args = [username, firstname, lastname, jsonId_token['email'], jsonId_token['picture']]
     mycursor = mydb.cursor(buffered=True)
     mycursor.callproc('grantGoogleAccess', args)
     mycursor.close()
     mydb.commit()
 
-    sql = "GRANT SELECT ON googleUsers TO "+ username +";"
+    sql = 'GRANT SELECT ON googleUsers TO "'+ username +'";'
     mycursor = mydb.cursor(buffered=True)
     mycursor.execute(sql)
     mycursor.close()
     
-    sql = "GRANT SELECT ON products TO "+ username +";\nGRANT SELECT ON cartItems TO "+ username +";\nGRANT SELECT ON productImages TO "+ username +";\nGRANT SELECT ON orderHistory TO "+ username +";\nGRANT SELECT ON users TO "+ username +";\nGRANT INSERT ON orderHistory TO "+ username +";\nGRANT INSERT ON cartItems TO "+ username +";\nGRANT INSERT ON productImages TO "+ username +";\nGRANT INSERT ON users TO "+ username +";\nGRANT INSERT ON googleUsers TO "+ username +";\nGRANT DELETE ON cartItems TO "+ username +";\nGRANT EXECUTE ON PROCEDURE addToOrderHistory TO "+ username +";"
+    sql = 'GRANT SELECT ON products TO "'+ username +'";\nGRANT SELECT ON cartItems TO "'+ username +'";\nGRANT SELECT ON productImages TO "'+ username +'";\nGRANT SELECT ON orderHistory TO "'+ username +'";\nGRANT SELECT ON users TO "'+ username +'";\nGRANT INSERT ON orderHistory TO "'+ username +'";\nGRANT INSERT ON cartItems TO "'+ username +'";\nGRANT INSERT ON productImages TO "'+ username +'";\nGRANT INSERT ON users TO "'+ username +'";\nGRANT INSERT ON googleUsers TO "'+ username +'";\nGRANT DELETE ON cartItems TO "'+ username +'";\nGRANT EXECUTE ON PROCEDURE addToOrderHistory TO "'+ username +'";'
     mycursor = mydb.cursor(buffered=True)
     mycursor.execute(sql)
     mycursor.close()
