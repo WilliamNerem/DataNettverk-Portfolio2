@@ -12,6 +12,8 @@ import prometheus_client
 from prometheus_flask_exporter import PrometheusMetrics
 import time
 import base64
+import ssl
+import requests
 
 mysql_user = 'default'
 mysql_pwd = 'fdsKG39F!ldk0dsLdM3@'
@@ -26,7 +28,6 @@ mycursor.execute("SELECT * FROM products")
 
 row_headers=[x[0] for x in mycursor.description]
 myresult = mycursor.fetchall()
-
 
 app = Flask(__name__)
 api = Api(app)
@@ -488,5 +489,5 @@ def addProductsReal():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True)
+    app.run(ssl_context=('home/localhost.crt', 'home/localhost.key'), host="0.0.0.0", debug=True)
     mydb.close()

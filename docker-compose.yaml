@@ -9,6 +9,8 @@ services:
       - "./app.py:/home/app.py"
       - "./static/:/home/static"
       - "./templates:/home/templates"
+      - "./localhost.crt:/home/localhost.crt"
+      - "./localhost.key:/home/localhost.key"
     env_file:
       - env.dev
     links:
