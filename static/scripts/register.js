@@ -23,7 +23,7 @@ function regUser() {
         password: password,
     }
 
-    fetch(`http://localhost:5000/fetchUsers`)
+    fetch(`https://localhost:5000/fetchUsers`)
         .then((res) => res.json())
         .then((data) => {
             userExists = false;
@@ -37,7 +37,7 @@ function regUser() {
         .then(() => {
 
             if (!userExists) {
-                fetch(`http://localhost:5000/register`, {
+                fetch(`https://localhost:5000/register`, {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json, text/plain, */*',
@@ -53,7 +53,7 @@ function regUser() {
 
                     })
                     .then(() => {
-                        fetch(`http://localhost:5000/login`, {
+                        fetch(`https://localhost:5000/login`, {
                             method: 'POST',
                             headers: {
                                 'Accept': 'application/json, text/plain, */*',
@@ -62,7 +62,7 @@ function regUser() {
                             body: JSON.stringify(newUser)
                         })
                             .then(() => {
-                                window.location.replace(`http://localhost:5000/profile`)
+                                window.location.replace(`https://localhost:5000/profile`)
 
                             })
                     })

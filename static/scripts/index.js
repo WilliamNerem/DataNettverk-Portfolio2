@@ -7,7 +7,7 @@ const sleep = (milliseconds) => {
     return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
 
-fetch('http://localhost:5000/fetchProducts')
+fetch('https://localhost:5000/fetchProducts')
 .then((res) => res.json())
 .then((data) => {
     let output = '<p class="lead">Owning a vacuum cleaner is essential to keep your home clean!</p>';
@@ -46,7 +46,7 @@ fetch('http://localhost:5000/fetchProducts')
 
         let product_id_value = this.value;
     
-        fetch(`http://localhost:5000/product/${product_id_value}`, {
+        fetch(`https://localhost:5000/product/${product_id_value}`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json, text/plain, */*',
@@ -58,7 +58,7 @@ fetch('http://localhost:5000/fetchProducts')
         .then((data) => {
             console.log(data)
 
-            window.location.replace(`http://localhost:5000/product/${product_id_value}`)
+            window.location.replace(`https://localhost:5000/product/${product_id_value}`)
 
         })
         .catch((error) => console.log(error))
@@ -69,7 +69,7 @@ fetch('http://localhost:5000/fetchProducts')
      function addToCart() {
         event.preventDefault();
         let prodId = this.value
-        fetch("http://localhost:5000/shoppingcart/" + prodId)
+        fetch("https://localhost:5000/shoppingcart/" + prodId)
         .then(() => {     
             checkItemsInCart();
         })
@@ -86,9 +86,9 @@ var id_token = null;
 //     Name = profile.getName();
 //     Email = profile.getEmail();
 //     ImageUrl = profile.getImageUrl();
-//     fetch(`http://localhost:5000/registerGoogle/${ID}/${Name}/${Email}/${ImageUrl}`)
+//     fetch(`https://localhost:5000/registerGoogle/${ID}/${Name}/${Email}/${ImageUrl}`)
 //     .then(() => {     
-//         window.location.replace(`http://localhost:5000/profile`)
+//         window.location.replace(`https://localhost:5000/profile`)
 //     })
 //     console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
 //     console.log('Name: ' + profile.getName());

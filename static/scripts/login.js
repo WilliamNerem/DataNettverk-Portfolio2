@@ -14,7 +14,7 @@ function login() {
         password: password,
     }
 
-    fetch(`http://localhost:5000/login`, {
+    fetch(`https://localhost:5000/login`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json, text/plain, */*',
@@ -25,7 +25,7 @@ function login() {
         .then((res) => res.json())
         .then((data) => {
             result.innerHTML = 'You are now logged in as ' + data.username
-            window.location.replace(`http://localhost:5000/profile`)
+            window.location.replace(`https://localhost:5000/profile`)
 
         })
         .catch((error) => {
@@ -43,7 +43,7 @@ function register() {
         username: username,
     }
 
-    fetch(`http://localhost:5000/goToRegister`, {
+    fetch(`https://localhost:5000/goToRegister`, {
         method: 'POST',
         headers: {
             'Accept': 'application/json, text/plain, */*',
@@ -52,7 +52,7 @@ function register() {
         body: JSON.stringify(userNotFound)
     })
     .then(() => {
-        window.location.replace(`http://localhost:5000/register`)
+        window.location.replace(`https://localhost:5000/register`)
     })
     .catch((error) => console.log(error))
 }
@@ -66,9 +66,9 @@ function onSignIn(googleUser) {
     Email = profile.getEmail();
     ImageUrl = profile.getImageUrl();
     id_token = googleUser.getAuthResponse().id_token;
-    fetch(`http://localhost:5000/registerGoogle/${id_token}`)
+    fetch(`https://localhost:5000/registerGoogle/${id_token}`)
     .then(() => {     
-        window.location.replace(`http://localhost:5000/profile`)
+        window.location.replace(`https://localhost:5000/profile`)
     })
     console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
     console.log('Name: ' + profile.getName());

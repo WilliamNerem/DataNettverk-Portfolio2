@@ -20,7 +20,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand mb-0 h1" href="http://localhost:5000/">
+            <a class="navbar-brand mb-0 h1" href="https://localhost:5000/">
                 <img src="../static/img/logo.png" alt="MWM Logo" class="d-inline-block align-text-top"
                     style="width: 30px;">
                 MWM Vacuums
@@ -31,12 +31,12 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
                 <div class="navbar-nav">
-                    <a class="nav-link" href="http://localhost:5000/">Home</a>
+                    <a class="nav-link" href="https://localhost:5000/">Home</a>
                     <a style="display: none;" id="addProducts" class="nav-link"
-                        href="http://localhost:5000/addproducts">Add new products</a>
-                    <a class="nav-link" href="http://localhost:5000/shoppingcart">
+                        href="https://localhost:5000/addproducts">Add new products</a>
+                    <a class="nav-link" href="https://localhost:5000/shoppingcart">
                         <span>Shopping cart</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        <svg xmlns="https://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-cart3" viewBox="0 0 16 16">
                             <path
                                 d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
@@ -54,7 +54,7 @@
 
     <div class="container">
         <h2 class="display-3">
-            <svg id="defaultUserImage" xmlns="http://www.w3.org/2000/svg" width="75" height="75" fill="currentColor"
+            <svg id="defaultUserImage" xmlns="https://www.w3.org/2000/svg" width="75" height="75" fill="currentColor"
                 class="bi bi-person-circle" viewBox="0 0 16 16">
                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
                 <path fill-rule="evenodd"
@@ -78,7 +78,7 @@
         </div>
         <div style="display: none;" class="g-signin2" data-onsuccess="onSignIn"></div>
         <button id="googleLogout" type="button" class="btn btn-danger" onclick="signOut(this)">Log out</button>
-        <button type="button" id="orderHistory" class="btn btn-dark" href="http://localhost:5000/">Order
+        <button type="button" id="orderHistory" class="btn btn-dark" href="https://localhost:5000/">Order
             history</button>
     </div>
     <script src="{{ url_for('static', filename='scripts/common.js') }}"></script>

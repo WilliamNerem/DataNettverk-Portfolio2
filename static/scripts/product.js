@@ -13,13 +13,13 @@ if (product_exists == 'false') {
 
 } else {
 
-    fetch("http://localhost:5000/fetchCurrent")
+    fetch("https://localhost:5000/fetchCurrent")
         .then((res) => res.json())
         .then((data) => {
             output = `
             <h1 class="display-4"> ${data.productName}</h1>
             <p class="lead">${data.productInfoLong}</p> `
-            return fetch("http://localhost:5000/fetchCurrentImage")
+            return fetch("https://localhost:5000/fetchCurrentImage")
         })
         .then((res) => res.json())
         .then((data) => {
@@ -50,7 +50,7 @@ if (product_exists == 'false') {
           <span class="visually-hidden">Next</span>
         </button>
       </div>`
-            return fetch("http://localhost:5000/fetchCurrent")
+            return fetch("https://localhost:5000/fetchCurrent")
         })
         .then((res) => res.json())
         .then((data) => {
@@ -67,7 +67,7 @@ if (product_exists == 'false') {
             function addToCart() {
                 event.preventDefault();
                 let prodId = this.value
-                fetch("http://localhost:5000/shoppingcart/" + prodId)
+                fetch("https://localhost:5000/shoppingcart/" + prodId)
                     .then(() => {
                         checkItemsInCart();
                     })

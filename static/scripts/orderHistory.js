@@ -1,6 +1,6 @@
 let currentUserId = document.getElementById('currentUserId').innerHTML;
 
-fetch(`http://localhost:5000/orderHistory/${currentUserId}`)
+fetch(`https://localhost:5000/orderHistory/${currentUserId}`)
 .then((res) => res.json())
 .then((data) => {
     output = '';

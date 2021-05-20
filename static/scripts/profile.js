@@ -2,7 +2,7 @@ document.getElementById('orderHistory').addEventListener('click', orderHistory)
 checkItemsInCart();
 
 function orderHistory() {
-    window.location.replace(`http://localhost:5000/orderHistory`)
+    window.location.replace(`https://localhost:5000/orderHistory`)
 }
 
 function onSuccess(googleUser){
@@ -20,8 +20,8 @@ function signOut() {
       load_users();
     });
     id_token = null;
-    fetch(`http://localhost:5000/logout`)
-    window.location.replace('http://localhost:5000/')
+    fetch(`https://localhost:5000/logout`)
+    window.location.replace('https://localhost:5000/')
 }
 
 if (document.getElementById('googleLogin').innerHTML == "True"){

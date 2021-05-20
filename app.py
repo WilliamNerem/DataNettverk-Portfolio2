@@ -34,7 +34,7 @@ api = Api(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'     
 app.config['CORS_HEADERS'] = 'Content-Type'
 db = SQLAlchemy(app)
-cors = CORS(app, resources={r"/": {"origins": "http://localhost:5000/"}})
+cors = CORS(app, resources={r"/": {"origins": "https://localhost:5000/"}})
 UPLOAD_FOLDER = 'home/static/img'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
