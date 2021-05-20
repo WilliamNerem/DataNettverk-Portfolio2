@@ -74,10 +74,8 @@
         <a href="http://localhost:5000/"><button type="button" id="logout" class="btn btn-danger">Log
                 out</button></a>
         <div style="display: none;" class="g-signin2" data-onsuccess="onSignIn"></div>
-        <div class="col">
-            <button type="button" class="btn btn-primary" onclick="signOut(this)">Sign out</button>
-        </div>
-        <button type="button" id="orderHistory" class="btn btn-primary" href="http://localhost:5000/">Order
+        <button type="button" class="btn btn-secondary" onclick="signOut(this)">Sign out</button>
+        <button type="button" id="orderHistory" class="btn btn-dark" href="http://localhost:5000/">Order
             history</button>
     </div>
     <script src="{{ url_for('static', filename='scripts/common.js') }}"></script>
