@@ -10,4 +10,3 @@ google-auth
 prometheus_client==0.7.1
 prometheus_flask_exporter
 requests
-cryptography
