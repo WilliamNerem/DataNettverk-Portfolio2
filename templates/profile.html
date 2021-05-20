@@ -70,9 +70,11 @@
             <div class="col-6"><b>Email Address:</b></div>
             <div class="col-6"> {{currentUser.email}}</div>
             <hr class="solid mb-5">
-            <div class="col-6"><b>Phone Number:</b></div>
-            <div class="col-6"> {{currentUser.phone}}</div>
-            <hr class="solid mb-5">
+            <span id="phonenumber">
+                <div class="col-6"><b>Phone Number:</b></div>
+                <div class="col-6"> {{currentUser.phone}}</div>
+                <hr class="solid mb-5">
+            </span>
         </div>
         <div style="display: none;" class="g-signin2" data-onsuccess="onSignIn"></div>
         <button id="googleLogout" type="button" class="btn btn-danger" onclick="signOut(this)">Log out</button>

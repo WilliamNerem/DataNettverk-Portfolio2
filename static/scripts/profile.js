@@ -27,4 +27,5 @@ function signOut() {
 if (document.getElementById('googleLogin').innerHTML == "True"){
     document.getElementById('defaultUserImage').style.display = "none"
     document.getElementById('userImageProfile').style.display = 'inline'
+    document.getElementById('phonenumber').style.display = 'none'
 }
