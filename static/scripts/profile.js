@@ -29,3 +29,7 @@ if (document.getElementById('googleLogin').innerHTML == "True"){
     document.getElementById('userImageProfile').style.display = 'inline'
     document.getElementById('phonenumber').style.display = 'none'
 }
+
+if (document.getElementById('currentName').innerHTML == "  "){
+    document.getElementById('nameRow').style.display = "none"
+}
