@@ -23,3 +23,11 @@ function signOut() {
     fetch(`http://localhost:5000/logout`)
     window.location.replace('http://localhost:5000/')
 }
+
+if (document.getElementById('googleLogin').innerHTML == "True"){
+    document.getElementById('logout').style.display = "none"
+    document.getElementById('defaultUserImage').style.display = "none"
+    document.getElementById('userImage').style.display = "inline"
+}else{
+    document.getElementById('googleLogout').style.display = "none"
+}

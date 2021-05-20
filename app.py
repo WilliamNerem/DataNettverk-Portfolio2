@@ -53,7 +53,7 @@ googleLogin = False
 
 @app.route("/", methods=['GET', 'POST'])
 def renderIndex():
-    return render_template('index.html', currentUser = currentUser)
+    return render_template('index.html', currentUser = currentUser, googleLogin = googleLogin)
 
 @app.route("/login", methods=['GET', 'POST'])
 @cross_origin(origin='localhost',headers=['Content-Type','Authorization'])
@@ -98,10 +98,10 @@ def login():
             mydb = mysql.connector.connect(user = mysql_user, password = mysql_pwd, host = mysql_host, database = mysql_db, autocommit=True)
             end = time.time()
             return jsonify(currentUser)
-        return render_template('login.html', currentUser = currentUser)
+        return render_template('login.html', currentUser = currentUser, googleLogin = googleLogin)
 
     else:
-        return render_template('login.html', currentUser = currentUser)
+        return render_template('login.html', currentUser = currentUser, googleLogin = googleLogin)
 
 
 
@@ -120,7 +120,7 @@ def logout():
     mysql_host = 'datanettverk-portfolio2_database_1'
     mysql_db = 'everything'
     mydb = mysql.connector.connect(user = mysql_user, password = mysql_pwd, host = mysql_host, database = mysql_db, autocommit=True)
-    return render_template('index.html', currentUser = currentUser)
+    return render_template('index.html', currentUser = currentUser, googleLogin = googleLogin)
 
 @app.route("/goToRegister", methods=['GET', 'POST'])
 @cross_origin(origin='localhost',headers=['Content-Type','Authorization'])
@@ -130,9 +130,9 @@ def goToRegister():
         reqdata = request.get_json()
         username = reqdata['username']
         prefilledUsername = username
-        return render_template('register.html', currentUser = currentUser, prefilledUsername = prefilledUsername)
+        return render_template('register.html', currentUser = currentUser, prefilledUsername = prefilledUsername, googleLogin = googleLogin)
     else:
-        return render_template('register.html', currentUser = currentUser, prefilledUsername = prefilledUsername)
+        return render_template('register.html', currentUser = currentUser, prefilledUsername = prefilledUsername, googleLogin = googleLogin)
 
 @app.route("/register", methods=['GET', 'POST'])
 @cross_origin(origin='localhost',headers=['Content-Type','Authorization'])
@@ -162,10 +162,10 @@ def register():
         
 
         mydb = mysql.connector.connect(user = username, password = password, host = mysql_host, database = mysql_db, autocommit=True)
-        return render_template('register.html', currentUser = currentUser, prefilledUsername = prefilledUsername)
+        return render_template('register.html', currentUser = currentUser, prefilledUsername = prefilledUsername, googleLogin = googleLogin)
 
     else:
-        return render_template('register.html', currentUser = currentUser, prefilledUsername = prefilledUsername)
+        return render_template('register.html', currentUser = currentUser, prefilledUsername = prefilledUsername, googleLogin = googleLogin)
 
 #@app.route("/metrics")
 #def requests_count():
@@ -191,11 +191,7 @@ def registerGoogle(id_token):
     id_tokenBytes = b64string.encode('ascii') 
     padded = id_tokenBytes + b'=' * (4 - len(id_tokenBytes) % 4) 
     jsonId_token = json.loads(base64.b64decode(padded))
-    # sql = """INSERT INTO googleUsers (user_id, name, email) VALUES (%s, %s, %s)"""
-    # val = (user_id, name, email)
-    # mycursor = mydb.cursor(buffered=True)
-    # mycursor.execute(sql, val)
-    # mydb.commit()
+    
     username = jsonId_token['given_name'] + jsonId_token['family_name']
     mydb = mysql.connector.connect(user = 'root', password = 'root', host = mysql_host, database = mysql_db, autocommit=True)
     args = [username, jsonId_token['given_name'], jsonId_token['family_name'], jsonId_token['email'], jsonId_token['picture']]
@@ -203,6 +199,7 @@ def registerGoogle(id_token):
     mycursor.callproc('grantGoogleAccess', args)
     mycursor.close()
     mydb.commit()
+
     sql = "GRANT SELECT ON googleUsers TO "+ username +";"
     mycursor = mydb.cursor(buffered=True)
     mycursor.execute(sql)
@@ -211,8 +208,8 @@ def registerGoogle(id_token):
     sql = "GRANT SELECT ON products TO "+ username +";\nGRANT SELECT ON cartItems TO "+ username +";\nGRANT SELECT ON productImages TO "+ username +";\nGRANT SELECT ON orderHistory TO "+ username +";\nGRANT SELECT ON users TO "+ username +";\nGRANT INSERT ON orderHistory TO "+ username +";\nGRANT INSERT ON cartItems TO "+ username +";\nGRANT INSERT ON productImages TO "+ username +";\nGRANT INSERT ON users TO "+ username +";\nGRANT INSERT ON googleUsers TO "+ username +";\nGRANT DELETE ON cartItems TO "+ username +";\nGRANT EXECUTE ON PROCEDURE addToOrderHistory TO "+ username +";"
     mycursor = mydb.cursor(buffered=True)
     mycursor.execute(sql)
-    
     mycursor.close()
+
     mydb = mysql.connector.connect(user = username, password = "7tbr23!", host = 'datanettverk-portfolio2_database_1', database = 'everything', autocommit=True)
 
     mycursor = mydb.cursor(buffered=True)
@@ -229,7 +226,7 @@ def registerGoogle(id_token):
     for row in myresult:
         currentUserId = row[0]
     
-    return render_template('register.html', currentUser = currentUser, prefilledUsername = prefilledUsername)
+    return render_template('register.html', currentUser = currentUser, prefilledUsername = prefilledUsername, googleLogin = googleLogin)
 
 @app.route("/fetchUsers", methods=['GET', 'POST'])
 @cross_origin(origin='localhost',headers=['Content-Type','Authorization'])
@@ -251,7 +248,7 @@ def fetchUsers():
 
 @app.route("/profile", methods=['GET', 'POST'])
 def profile():
-    return render_template('profile.html', currentUser = currentUser)
+    return render_template('profile.html', currentUser = currentUser, googleLogin = googleLogin)
 
 @app.route("/fetchProducts", methods=['GET', 'POST'])
 @cross_origin(origin='localhost',headers=['Content-Type','Authorization'])
@@ -304,14 +301,14 @@ def productDescription(product_id):
         currentProduct = json_data[product_id-1]
         currentProductId = product_id
         product_exists = "true"
-        return render_template('product.html', product_exists = product_exists, currentUser = currentUser)
+        return render_template('product.html', product_exists = product_exists, currentUser = currentUser, googleLogin = googleLogin)
     except:
         product_exists = "false"
-        return render_template('product.html', product_exists = product_exists, currentUser = currentUser)
+        return render_template('product.html', product_exists = product_exists, currentUser = currentUser, googleLogin = googleLogin)
 
 @app.route("/shoppingcart", methods=['GET', 'POST'])
 def shoppingcart():
-    return render_template('shoppingcart.html', currentUser = currentUser)
+    return render_template('shoppingcart.html', currentUser = currentUser, googleLogin = googleLogin)
 
 @app.route("/shoppingcart/<int:product_id>", methods=['GET', 'POST'])
 @cross_origin(origin='localhost',headers=['Content-Type','Authorization'])
@@ -335,11 +332,11 @@ def addToShoppingcart(product_id):
     mycursor = mydb.cursor(buffered=True)
     mycursor.execute(sql, val)
     mydb.commit()
-    return render_template('shoppingcart.html', countCart = len(json_data), currentUser = currentUser)
+    return render_template('shoppingcart.html', countCart = len(json_data), currentUser = currentUser, googleLogin = googleLogin)
 
 @app.route("/shoppingcart/checkout", methods=['GET', 'POST'])
 def checkout():
-    return render_template('shoppingcart.html', currentUser = currentUser)
+    return render_template('shoppingcart.html', currentUser = currentUser, googleLogin = googleLogin)
 
 @app.route("/shoppingcart/countItems", methods=['GET', 'POST'])
 @cross_origin(origin='localhost',headers=['Content-Type','Authorization'])
@@ -419,11 +416,11 @@ def orderHistory(user_id):
 def renderOrderHistory():
     global currentUser
     global currentUserId
-    return render_template('orderHistory.html', currentUser = currentUser, currentUserId = currentUserId)
+    return render_template('orderHistory.html', currentUser = currentUser, currentUserId = currentUserId, googleLogin = googleLogin)
 
 @app.route("/addproducts", methods=['GET', 'POST'])
 def addproductsyup():
-    return render_template('addproducts.html', currentUser = currentUser)
+    return render_template('addproducts.html', currentUser = currentUser, googleLogin = googleLogin)
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -459,7 +456,7 @@ def addProductsReal():
                 val = (prodid[0], 'static/img/defaultVacuum.jpg')
                 mycursor = mydb.cursor(buffered=True)
                 mycursor.execute(sql, val)
-                return render_template('addproducts.html', currentUser = currentUser, success = 'Product added!')
+                return render_template('addproducts.html', currentUser = currentUser, success = 'Product added!', googleLogin = googleLogin)
             else:
                 files[0].save(file_fullPath)
                 sql = """INSERT INTO products (productName, price, productInfoShort, productInfoLong, productImage) VALUES (%s, %s, %s, %s, %s)"""
@@ -483,11 +480,11 @@ def addProductsReal():
                         mycursor = mydb.cursor(buffered=True)
                         mycursor.execute(sql, val)
                 
-                return render_template('addproducts.html', currentUser = currentUser, success = 'Product added!')
+                return render_template('addproducts.html', currentUser = currentUser, success = 'Product added!', googleLogin = googleLogin)
         else:
-          return render_template('addproducts.html', currentUser = currentUser, wentWrong = 'Invalid file. File must be .png, .jpeg or .jpg')      
+          return render_template('addproducts.html', currentUser = currentUser, wentWrong = 'Invalid file. File must be .png, .jpeg or .jpg', googleLogin = googleLogin)      
     else:
-        return render_template('addproducts.html', currentUser = currentUser)
+        return render_template('addproducts.html', currentUser = currentUser, googleLogin = googleLogin)
 
 
 if __name__ == "__main__":

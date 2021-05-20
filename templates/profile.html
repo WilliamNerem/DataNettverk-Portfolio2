@@ -46,18 +46,21 @@
                 </div>
             </div>
             <span id="loginLink"></span>
+            <div id="googleLogin" style="display: none;">{{googleLogin}}</div>
             <div id="currentUser" style="display: none;">{{currentUser.username}}</div>
+            <div id="currentUserImage" style="display: none;">{{currentUser.image}}</div>
         </div>
     </nav>
 
     <div class="container">
         <h2 class="display-3">
-            <svg xmlns="http://www.w3.org/2000/svg" width="75" height="75" fill="currentColor"
+            <svg id="defaultUserImage" xmlns="http://www.w3.org/2000/svg" width="75" height="75" fill="currentColor"
                 class="bi bi-person-circle" viewBox="0 0 16 16">
                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
                 <path fill-rule="evenodd"
                     d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
             </svg>
+            <img id="userImage" src="{{currentUser.image}}" width="75" height="75" style="display: none; border-radius: 50%;" alt=""></img>
             {{currentUser.username}}
         </h2>
         <div class="row col-6 mt-5 fs-1rem">
@@ -72,7 +75,7 @@
             <hr class="solid mb-5">
         </div>
         <div style="display: none;" class="g-signin2" data-onsuccess="onSignIn"></div>
-        <button type="button" class="btn btn-danger" onclick="signOut(this)">Log out</button>
+        <button id="googleLogout" type="button" class="btn btn-danger" onclick="signOut(this)">Log out</button>
         <button type="button" id="orderHistory" class="btn btn-dark" href="http://localhost:5000/">Order
             history</button>
     </div>
