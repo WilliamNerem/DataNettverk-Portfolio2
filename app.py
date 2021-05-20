@@ -201,10 +201,17 @@ def registerGoogle(id_token):
     args = [username, jsonId_token['given_name'], jsonId_token['family_name'], jsonId_token['email'], jsonId_token['picture']]
     mycursor = mydb.cursor(buffered=True)
     mycursor.callproc('grantGoogleAccess', args)
-    
-    sql = "GRANT SELECT ON products TO "+ username +";\nGRANT SELECT ON cartItems TO "+ username +";\nGRANT SELECT ON productImages TO "+ username +";\nGRANT SELECT ON orderHistory TO "+ username +";\nGRANT SELECT ON users TO "+ username +";\nGRANT SELECT ON googleUsers TO "+ username +";\nGRANT INSERT ON orderHistory TO "+ username +";\nGRANT INSERT ON cartItems TO "+ username +";\nGRANT INSERT ON productImages TO "+ username +";\nGRANT INSERT ON users TO "+ username +";\nGRANT INSERT ON googleUsers TO "+ username +";\nGRANT DELETE ON cartItems TO "+ username +";\nGRANT EXECUTE ON PROCEDURE addToOrderHistory TO "+ username +";"
+    mycursor.close()
+    mydb.commit()
+    sql = "GRANT SELECT ON googleUsers TO "+ username +";"
     mycursor = mydb.cursor(buffered=True)
     mycursor.execute(sql)
+    mycursor.close()
+    
+    sql = "GRANT SELECT ON products TO "+ username +";\nGRANT SELECT ON cartItems TO "+ username +";\nGRANT SELECT ON productImages TO "+ username +";\nGRANT SELECT ON orderHistory TO "+ username +";\nGRANT SELECT ON users TO "+ username +";\nGRANT INSERT ON orderHistory TO "+ username +";\nGRANT INSERT ON cartItems TO "+ username +";\nGRANT INSERT ON productImages TO "+ username +";\nGRANT INSERT ON users TO "+ username +";\nGRANT INSERT ON googleUsers TO "+ username +";\nGRANT DELETE ON cartItems TO "+ username +";\nGRANT EXECUTE ON PROCEDURE addToOrderHistory TO "+ username +";"
+    mycursor = mydb.cursor(buffered=True)
+    mycursor.execute(sql)
+    
     mycursor.close()
     mydb = mysql.connector.connect(user = username, password = "7tbr23!", host = 'datanettverk-portfolio2_database_1', database = 'everything', autocommit=True)
 
