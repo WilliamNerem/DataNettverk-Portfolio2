@@ -21,7 +21,7 @@ function signOut() {
     });
     id_token = null;
     fetch(`https://localhost:5000/logout`)
-    window.location.replace('https://localhost:5000/')
+    .then(() => window.location.replace('https://localhost:5000/'))
 }
 
 if (document.getElementById('googleLogin').innerHTML == "True"){
