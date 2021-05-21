@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS productImages(
     productImage        VARCHAR(300) NOT NULL,
     PRIMARY KEY         (image_id)
 );
-#
+
 
 INSERT INTO products (productName, price, productInfoShort, productInfoLong, productImage) 
 VALUES 
