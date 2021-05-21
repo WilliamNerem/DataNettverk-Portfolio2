@@ -1,43 +1,28 @@
-from flask import Flask, request, render_template, jsonify    #Response
-# from flask_restful import Api
-# from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, request, render_template, jsonify
 import json
 import os
 from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 import mysql.connector
 from google.oauth2 import id_token as goog_token
-# from google.auth.transport import requests as goog_req
 import prometheus_client
 from prometheus_flask_exporter import PrometheusMetrics
-# import time
 import base64
 import ssl
-# import requests
 
 mysql_user = 'default'
 mysql_pwd = 'fdsKG39F!ldk0dsLdM3@'
 mysql_host = 'datanettverk-portfolio2_database_1'
 mysql_db = 'everything'
-# oauth_id = '327986808053-k9gr4qboqvo28psnnrqnqjem9qdehkn2.apps.googleusercontent.com'
 
 mydb = mysql.connector.connect(user = mysql_user, password = mysql_pwd, host = mysql_host, database = mysql_db, autocommit=True)
 
-# mycursor = mydb.cursor(buffered=True)
-# mycursor.execute("SELECT * FROM products")
-# row_headers=[x[0] for x in mycursor.description]
-# myresult = mycursor.fetchall()
-
-app = Flask(__name__)
-# api = Api(app)
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'     
+app = Flask(__name__) 
 app.config['CORS_HEADERS'] = 'Content-Type'
-# db = SQLAlchemy(app)
 cors = CORS(app, resources={r"/": {"origins": "https://localhost:5000/"}})
 UPLOAD_FOLDER = 'home/static/img'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-# SQLALCHEMY_TRACK_MODIFICATIONS = False
 metrics = PrometheusMetrics(app=app)
 metrics.info("app_info", "Overview for MWM application", version="1.0.0")
 
@@ -65,7 +50,6 @@ def login():
     correctLogin = False
     mycursor = mydb.cursor(buffered=True)
     mycursor.execute("SELECT * FROM users")
-    # mydb.commit()
     row_headers=[x[0] for x in mycursor.description]
     myresult = mycursor.fetchall()
     mycursor.close()
@@ -115,10 +99,6 @@ def logout():
     googleLogin = False
     currentUser = {}
     currentUserId = None
-    # mysql_user = 'default'
-    # mysql_pwd = 'fdsKG39F!ldk0dsLdM3@'
-    # mysql_host = 'datanettverk-portfolio2_database_1'
-    # mysql_db = 'everything'
     mydb = mysql.connector.connect(user = mysql_user, password = mysql_pwd, host = mysql_host, database = mysql_db, autocommit=True)
     return render_template('index.html', currentUser = currentUser, googleLogin = googleLogin)
 
@@ -145,20 +125,16 @@ def register():
         email = reqdata['email']
         phone = reqdata['phone']
         password = reqdata['password']
-        # mysql_host = 'datanettverk-portfolio2_database_1'
-        # mysql_db = 'everything'
         mydb = mysql.connector.connect(user = 'root', password = 'root', host = mysql_host, database = mysql_db, autocommit=True)
         args = [username, firstname, lastname, email, phone, password]
         mycursor = mydb.cursor(buffered=True)
         mycursor.callproc('grantAccess', args)
         mycursor.close()
-        # mydb.commit()
 
         sql = "GRANT SELECT ON products TO "+ username +";\nGRANT SELECT ON cartItems TO "+ username +";\nGRANT SELECT ON productImages TO "+ username +";\nGRANT SELECT ON orderHistory TO "+ username +";\nGRANT SELECT ON users TO "+ username +";\nGRANT SELECT ON googleUsers TO "+ username +";\nGRANT INSERT ON orderHistory TO "+ username +";\nGRANT INSERT ON cartItems TO "+ username +";\nGRANT INSERT ON productImages TO "+ username +";\nGRANT INSERT ON users TO "+ username +";\nGRANT INSERT ON googleUsers TO "+ username +";\nGRANT DELETE ON cartItems TO "+ username +";\nGRANT EXECUTE ON PROCEDURE addToOrderHistory TO "+ username +";"
         mycursor = mydb.cursor(buffered=True)
         mycursor.execute(sql)
         mycursor.close()
-        # mydb.commit()
         
 
         mydb = mysql.connector.connect(user = username, password = password, host = mysql_host, database = mysql_db, autocommit=True)
@@ -177,10 +153,7 @@ def registerGoogle(id_token):
 
     googleLogin = True
     id_token_split = id_token.split('.')
-
-    # if (len(id_token_split) != 3): 
-    #     print('Wrong number of segments in token: %s' % id_token)
-
+    
     b64string = id_token_split[1]
     id_tokenBytes = b64string.encode('ascii') 
     padded = id_tokenBytes + b'=' * (4 - len(id_tokenBytes) % 4) 
@@ -203,7 +176,6 @@ def registerGoogle(id_token):
     mycursor = mydb.cursor(buffered=True)
     mycursor.callproc('grantGoogleAccess', args)
     mycursor.close()
-    # mydb.commit()
 
     sql = 'GRANT SELECT ON googleUsers TO "'+ username +'";'
     mycursor = mydb.cursor(buffered=True)
@@ -219,7 +191,6 @@ def registerGoogle(id_token):
 
     mycursor = mydb.cursor(buffered=True)
     mycursor.execute("SELECT * FROM googleUsers WHERE email='"+str(jsonId_token['email'])+"'")
-    # mydb.commit()
     row_headers=[x[0] for x in mycursor.description]
     myresult = mycursor.fetchall()
     mycursor.close()
@@ -240,7 +211,6 @@ def fetchUsers():
 
     mycursor = mydb.cursor(buffered=True)
     mycursor.execute("SELECT * FROM users")
-    # mydb.commit()
     row_headers=[x[0] for x in mycursor.description]
     myresult = mycursor.fetchall()
     mycursor.close()
@@ -261,7 +231,6 @@ def fetchProducts():
 
     mycursor = mydb.cursor(buffered=True)
     mycursor.execute("SELECT * FROM products")
-    # mydb.commit()
     row_headers=[x[0] for x in mycursor.description]
     myresult = mycursor.fetchall()
     mycursor.close()
@@ -350,7 +319,6 @@ def addToShoppingcart(product_id):
     val = (itemValues[0], itemValues[1], itemValues[2], itemValues[3], itemValues[4], itemValues[5])
     mycursor = mydb.cursor(buffered=True)
     mycursor.execute(sql, val)
-    # mydb.commit()
     return render_template('shoppingcart.html', countCart = len(json_data), currentUser = currentUser, googleLogin = googleLogin)
 
 @app.route("/shoppingcart/checkout", methods=['GET', 'POST'])
@@ -390,7 +358,6 @@ def removeCheckoutItems(shoppingcart_id):
     mycursor = mydb.cursor(buffered=True)
     mycursor.execute(sql)
     mycursor.close()
-    # mydb.commit()
 
     cartJson_data = []
     mycursor = mydb.cursor(buffered=True)
@@ -414,7 +381,6 @@ def completePayment(paymentSuccessful):
         mycursor = mydb.cursor(buffered=True)
         mycursor.callproc('addToOrderHistory', args)
         mycursor.close()
-        # mydb.commit()
     return paymentSuccessful
 
 @app.route("/orderHistory/<int:user_id>", methods=['GET', 'POST'])
@@ -464,7 +430,6 @@ def addProductsReal():
                 val = (pname, price, pinfos, pinfol, 'static/img/defaultVacuum.jpg')
                 mycursor = mydb.cursor(buffered=True)
                 mycursor.execute(sql, val)
-                # mydb.commit()
 
                 sql = """SELECT product_id FROM products ORDER BY product_id DESC LIMIT 1;"""
                 mycursor = mydb.cursor(buffered=True)
@@ -482,7 +447,6 @@ def addProductsReal():
                 val = (pname, price, pinfos, pinfol, filepath)
                 mycursor = mydb.cursor(buffered=True)
                 mycursor.execute(sql, val)
-                # mydb.commit()
 
                 sql = """SELECT product_id FROM products ORDER BY product_id DESC LIMIT 1;"""
                 mycursor = mydb.cursor(buffered=True)
