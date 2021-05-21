@@ -1,4 +1,4 @@
-version: "3.9"
+version: "2.9"
 
 services:
   web:
@@ -15,9 +15,10 @@ services:
       - env.dev
     links:
       - database:everything
-    depends_on: 
-      - database
     restart: always
+    depends_on: 
+      database: 
+        condition: service_healthy
 
   database:
     build:
@@ -29,6 +30,11 @@ services:
       - "MYSQL_PASSWORD=supersecretpasswd"
     volumes: 
       - "./database/mysql/:/docker-entrypoint-initdb.d"
+    healthcheck: 
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 4s
+      retries: 15
+
   prometheus:
     image: prom/prometheus
     ports: 

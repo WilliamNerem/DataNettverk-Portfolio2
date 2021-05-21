@@ -5,7 +5,6 @@ from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 import mysql.connector
 from google.oauth2 import id_token as goog_token
-import prometheus_client
 from prometheus_flask_exporter import PrometheusMetrics
 import base64
 import ssl
