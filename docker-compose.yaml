@@ -52,7 +52,7 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./monitoring/datasource.yml:/etc/grafana/provisioning/datasource.yml
+      - ./datasource.yml:/etc/grafana/provisioning/datasource.yml
     env_file:
       - config.monitoring  
 
