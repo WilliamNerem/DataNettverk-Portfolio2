@@ -85,7 +85,9 @@
     </div>
 
     <script src="{{ url_for('static', filename='scripts/common.js') }}"></script>
-    <script src="{{ url_for('static', filename='scripts/addproducts.js') }}"></script>
+    <script>
+        checkItemsInCart();
+    </script>
 </body>
 
 </html>
