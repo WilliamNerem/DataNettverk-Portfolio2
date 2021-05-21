@@ -1,4 +1,3 @@
-//idCounter = 0
 let itemsInCart = 0;
 var users = []
 var logged_in = null
@@ -8,11 +7,11 @@ const sleep = (milliseconds) => {
 }
 
 fetch('https://localhost:5000/fetchProducts')
-.then((res) => res.json())
-.then((data) => {
-    let output = '<p class="lead">Owning a vacuum cleaner is essential to keep your home clean!</p>';
-    data.forEach(function(product){
-        output += `
+    .then((res) => res.json())
+    .then((data) => {
+        let output = '<p class="lead">Owning a vacuum cleaner is essential to keep your home clean!</p>';
+        data.forEach(function (product) {
+            output += `
             <div class="col-sm-3">
                 <div class="card text-dark bg-light mb-3 h-100">
                     <input type="image" src="${product.productImage}" class="showProduct card-img-top" value="${product.product_id}" />
@@ -28,90 +27,46 @@ fetch('https://localhost:5000/fetchProducts')
                 </div>
             </div>
         `
-    })
-    document.getElementById('renderContent').innerHTML = output;
-    
-    
-    document.querySelectorAll('.showProduct').forEach(item => {
-        item.addEventListener('click', getProductInfo)
-    })
-
-    document.querySelectorAll('.addToCart').forEach(item => {
-        item.addEventListener('click', addToCart)
-    })
-
-    
-     function getProductInfo(e) {
-         e.preventDefault();
-
-        let product_id_value = this.value;
-    
-        fetch(`https://localhost:5000/product/${product_id_value}`, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json, text/plain, */*',
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify({product_id_value:product_id_value})
         })
-        .then((res) => res.text())
-        .then((data) => {
-            console.log(data)
+        document.getElementById('renderContent').innerHTML = output;
 
-            window.location.replace(`https://localhost:5000/product/${product_id_value}`)
 
+        document.querySelectorAll('.showProduct').forEach(item => {
+            item.addEventListener('click', getProductInfo)
         })
-        .catch((error) => console.log(error))
 
-     }
-
-
-     function addToCart() {
-        event.preventDefault();
-        let prodId = this.value
-        fetch("https://localhost:5000/shoppingcart/" + prodId)
-        .then(() => {     
-            checkItemsInCart();
+        document.querySelectorAll('.addToCart').forEach(item => {
+            item.addEventListener('click', addToCart)
         })
-     }
-     checkItemsInCart();
 
-})
+        function getProductInfo(e) {
+            e.preventDefault();
 
-var id_token = null;
+            let product_id_value = this.value;
 
-// function onSignIn(googleUser) {
-//     var profile = googleUser.getBasicProfile();
-//     ID = profile.getId();
-//     Name = profile.getName();
-//     Email = profile.getEmail();
-//     ImageUrl = profile.getImageUrl();
-//     fetch(`https://localhost:5000/registerGoogle/${ID}/${Name}/${Email}/${ImageUrl}`)
-//     .then(() => {     
-//         window.location.replace(`https://localhost:5000/profile`)
-//     })
-//     console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-//     console.log('Name: ' + profile.getName());
-//     console.log('Image URL: ' + profile.getImageUrl());
-//     console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+            fetch(`https://localhost:5000/product/${product_id_value}`, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({ product_id_value: product_id_value })
+            })
+                .then(() => {
+                    window.location.replace(`https://localhost:5000/product/${product_id_value}`)
 
-//     id_token = googleUser.getAuthResponse().id_token;
-//     console.log(`ID Token to pass to server: ${id_token}`)
+                })
+                .catch((error) => console.log(error))
 
-//     logged_in = profile;
+        }
 
-//     // Render again to get the logged in users card
-//     // updated from the google profile
-//     remove_users();
-//     render_users(users);
-// }
-// function signOut() {
-//     var auth2 = gapi.auth2.getAuthInstance();
-//     auth2.signOut().then(function () {
-//       console.log('User signed out.');
-//       logged_in = null;
-//       remove_users();
-//       load_users();
-//     });
-//     id_token = null;
-// }
+        function addToCart() {
+            event.preventDefault();
+            let prodId = this.value
+            fetch("https://localhost:5000/shoppingcart/" + prodId)
+                .then(() => {
+                    checkItemsInCart();
+                })
+        }
+        checkItemsInCart();
+    })

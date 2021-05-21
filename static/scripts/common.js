@@ -2,9 +2,8 @@ const currentUser = document.getElementById('currentUser').innerHTML
 const googleLogin = document.getElementById('googleLogin').innerHTML
 const currentUserImage = document.getElementById('currentUserImage').innerHTML
 let output = '<a class="nav-link float-end" href="https://localhost:5000/login">Log in/Register</a>'
-console.log(currentUserImage)
-console.log(googleLogin)
-if(googleLogin == 'True') {
+
+if (googleLogin == 'True') {
     output = `<a class="nav-link float-end" href="https://localhost:5000/profile">
         <img id="userImage" src="${currentUserImage}" width="16" height="16" style="border-radius: 50%;" alt=""></img>
         `+ currentUser + `
@@ -26,13 +25,13 @@ if (currentUser == 'admin') {
     document.getElementById('addProducts').style.display = "inline"
 }
 
-function checkItemsInCart(){
+function checkItemsInCart() {
     fetch('https://localhost:5000/shoppingcart/countItems')
-    .then((res) => res.json())
-    .then((data) => {
-        itemsInCart = data.length;
-        document.getElementById('shoppingCart').innerHTML = `${itemsInCart}`
-    })
+        .then((res) => res.json())
+        .then((data) => {
+            itemsInCart = data.length;
+            document.getElementById('shoppingCart').innerHTML = `${itemsInCart}`
+        })
 
 }
 

@@ -16,7 +16,7 @@ discountForm.onsubmit = () => {
     event.preventDefault();
     const code = discountCode.value
 
-    if(code.toLowerCase() == 'vacuum100') {
+    if (code.toLowerCase() == 'vacuum100') {
         totalPrice = 0;
         document.getElementById('total-price').innerHTML = 'Total: ' + totalPrice + ',-';
         validation.style = 'color: green;'
@@ -41,20 +41,18 @@ completePayment.onclick = () => {
     }
 
     fetch(`https://localhost:5000/payment/complete/${paymentSuccessful}`, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json, text/plain, */*',
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify({paymentSuccessful:paymentSuccessful})
-        })
-        .then((res) => res.text())
-        .then((data) => {})
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify({ paymentSuccessful: paymentSuccessful })
+    })
         .then(() => {
             displayCart();
         })
         .catch((error) => console.log(error))
-        
+
 }
 
 function displayCart() {
@@ -63,8 +61,6 @@ function displayCart() {
         .then((data) => {
             let output = ``
             let addedToCart = []
-            console.log(data)
-
             data.forEach(function (product) {
                 let count = 0
                 for (let i = 0; i < data.length; i++) {
@@ -99,10 +95,10 @@ function displayCart() {
                 `
 
                     document.getElementById('cartButtons' + product.product_id).innerHTML = outputBtn
-                }                    
+                }
             })
-            
-            if(data.length == 0) {
+
+            if (data.length == 0) {
                 document.getElementById('renderContent').innerHTML = '<p class="text-muted">You have no items in you shopping cart!';
             }
 
@@ -117,43 +113,27 @@ function displayCart() {
             function deleteItemFromCart() {
                 event.preventDefault();
                 let cartId = this.value
-                let prodId = this.value1
-                console.log(prodId)
+                let prodId = this.value
                 fetch('https://localhost:5000/shoppingcart/remove/' + cartId)
-                .then(() => {
-                    displayCart();
-                    if (document.getElementById('countInCart' + prodId).innerHTML == '1') {
-                        document.getElementById("cartId" + cartId).remove();
-                    }
-                })
-                
+                    .then(() => {
+                        displayCart();
+                        if (document.getElementById('countInCart' + prodId).innerHTML == '1') {
+                            document.getElementById("cartId" + cartId).remove();
+                        }
+                    })
+
             }
 
             function addToCart() {
                 event.preventDefault();
                 let prodId = this.value
                 fetch("https://localhost:5000/shoppingcart/" + prodId)
-                .then(() => {
-                    displayCart();
-                })
+                    .then(() => {
+                        displayCart();
+                    })
             }
             checkItemsAndPriceInCart();
         })
-}
-
-function deleteFromCart(shoppingCart_id, product_id) {
-    event.preventDefault();
-    fetch('https://localhost:5000/shoppingcart/remove/' + shoppingCart_id)
-    if (document.getElementById('countInCart' + product_id).innerHTML == '1') {
-        document.getElementById("cartId" + shoppingCart_id).remove();
-    } else {
-        sleep(10).then(() => {
-            displayCart();
-        })
-    }
-    sleep(10).then(() => {
-        checkItemsAndPriceInCart();
-    })
 }
 
 function checkItemsAndPriceInCart() {

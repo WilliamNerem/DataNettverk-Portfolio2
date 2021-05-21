@@ -45,8 +45,7 @@ function regUser() {
                     },
                     body: JSON.stringify(newUser)
                 })
-                    .then((res) => res.text())
-                    .then((data) => {
+                    .then(() => {
 
                         result.style = 'color: green;'
                         result.innerHTML = 'User added!'
